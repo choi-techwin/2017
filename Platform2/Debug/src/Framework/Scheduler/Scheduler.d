@@ -1,0 +1,38 @@
+src/Framework/Scheduler/Scheduler.o: \
+ ../src/Framework/Scheduler/Scheduler.cpp \
+ ../src/Framework/Scheduler/Scheduler.h \
+ ../src/Framework/Scheduler/../Component/EventTarget.h \
+ ../src/Framework/Scheduler/../Component/EventSource.h \
+ ../src/Framework/Scheduler/../Component/Component.h \
+ ../src/Framework/Scheduler/../Component/EventTargetID.h \
+ /cygdrive/c/workspaceCPP/Platform2/src/Technical/Device/Sensor.h \
+ /cygdrive/c/workspaceCPP/Platform2/src/Technical/Device/Device.h \
+ /cygdrive/c/workspaceCPP/Platform2/src/Framework/Scheduler/Event.h \
+ /cygdrive/c/workspaceCPP/Platform2/src/Framework/Global/ValueObject.h \
+ /cygdrive/c/workspaceCPP/Platform2/src/Technical/Device/Actuator.h \
+ ../src/Framework/Scheduler/EventQueue.h \
+ ../src/Framework/Scheduler/../../Domain/PWM/PWM.h
+
+../src/Framework/Scheduler/Scheduler.h:
+
+../src/Framework/Scheduler/../Component/EventTarget.h:
+
+../src/Framework/Scheduler/../Component/EventSource.h:
+
+../src/Framework/Scheduler/../Component/Component.h:
+
+../src/Framework/Scheduler/../Component/EventTargetID.h:
+
+/cygdrive/c/workspaceCPP/Platform2/src/Technical/Device/Sensor.h:
+
+/cygdrive/c/workspaceCPP/Platform2/src/Technical/Device/Device.h:
+
+/cygdrive/c/workspaceCPP/Platform2/src/Framework/Scheduler/Event.h:
+
+/cygdrive/c/workspaceCPP/Platform2/src/Framework/Global/ValueObject.h:
+
+/cygdrive/c/workspaceCPP/Platform2/src/Technical/Device/Actuator.h:
+
+../src/Framework/Scheduler/EventQueue.h:
+
+../src/Framework/Scheduler/../../Domain/PWM/PWM.h:
