@@ -13,6 +13,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <exception>
 using namespace std;
 
 static string MAIN_KEY = "MAIN";
@@ -20,30 +21,21 @@ static string MAIN_KEY = "MAIN";
 static string BEGIN = "{";
 static string END = "}";
 static string DELIMETER = " ";
-static char DELIMETERS[] = {' ', '\n', '\t', '\r', '\0'};
 
+class ParserException {
+protected:
+	int id;
+	string message;
+public:
+	ParserException(int id, string message) {
+		this->id = id;
+		this->message = message;
+	}
+};
 
 class Tokenizer {
 private:
 	ifstream fin;
-	bool isDelimeter(char c) {
-		for (int i=0; i<7; i++) {
-			if (c == DELIMETERS[i])
-				return true;
-		}
-		return false;
-	}
-	string removeDelimeters() {
-		char c;
-		this->fin >> c;
-		while (isDelimeter(c)) {
-			this->fin >> c;
-		}
-		string result;
-		result += c;
-		return result;
-	}
-
 public:
 	Tokenizer() {
 	}
@@ -51,12 +43,17 @@ public:
 
 	void open(string fileName) {
 		fin.open(fileName.c_str());
-		fin.is_open();
+		if (!fin.is_open())
+			throw new ParserException(1, fileName);
 	}
 	string read() {
-		string token;
-		this->fin >> token;
-		return token;
+		try {
+			string token;
+			this->fin >> token;
+			return token;
+		} catch (exception& e) {
+			throw new ParserException(2, "");
+		}
 	}
 	bool eof() {
 		return this->fin.eof();
@@ -161,11 +158,14 @@ public:
 
 	void read(string key) {
 		string fileName = "rsc/"+ key + ".txt";
-		if (tokenizer.open(fileName)) {
+		try {
+			tokenizer.open(fileName);
 			header.read(&tokenizer, key);
 			body.read(&tokenizer, key, BEGIN);
 
 			this->pCurrent = &this->body;
+		} catch (ParserException &e) {
+
 		}
 	}
 
