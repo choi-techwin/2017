@@ -11,12 +11,9 @@ using namespace std;
 #include "TrafficLightState.h"
 
 TrafficLightState::TrafficLightState() {
-	// TODO Auto-generated constructor stub
-
 }
 
 TrafficLightState::~TrafficLightState() {
-	// TODO Auto-generated destructor stub
 }
 
 void TrafficLightState::Initalize() {
@@ -72,7 +69,8 @@ void TrafficLightState::SelectState() {
 		break;
 	}
 }
-void SNSState(EControllerEvent eControllerEvent) {
+
+void TrafficLightState::SNSState(EControllerEvent eControllerEvent) {
 	switch (eControllerEvent) {
 	case E_CONTROLLER_TIMEOUT:
 		TimeOut();
@@ -82,7 +80,7 @@ void SNSState(EControllerEvent eControllerEvent) {
 	}
 }
 
-void SNSState(EControllerEvent eControllerEvent) {
+void TrafficLightState::SNLState(EControllerEvent eControllerEvent) {
 	switch (eControllerEvent) {
 	case E_CONTROLLER_TIMEOUT:
 		TimeOut();
@@ -92,7 +90,7 @@ void SNSState(EControllerEvent eControllerEvent) {
 	}
 }
 
-void SNSState(EControllerEvent eControllerEvent) {
+void TrafficLightState::EWSState(EControllerEvent eControllerEvent) {
 	switch (eControllerEvent) {
 	case E_CONTROLLER_TIMEOUT:
 		TimeOut();
@@ -102,7 +100,7 @@ void SNSState(EControllerEvent eControllerEvent) {
 	}
 }
 
-void SNSState(EControllerEvent eControllerEvent) {
+void TrafficLightState::EWLState(EControllerEvent eControllerEvent) {
 	switch (eControllerEvent) {
 	case E_CONTROLLER_TIMEOUT:
 		TimeOut();

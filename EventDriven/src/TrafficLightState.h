@@ -18,6 +18,12 @@ public:
 
 	virtual void ProcessEvent(EControllerEvent eControllerEvent);
 
+	void SelectState();
+	void SNSState(EControllerEvent eControllerEvent);
+	void SNLState(EControllerEvent eControllerEvent);
+	void EWSState(EControllerEvent eControllerEvent);
+	void EWLState(EControllerEvent eControllerEvent);
+
 	virtual void ChangeLightSNS();
 	virtual void ChangeLightSNL();
 	virtual void ChangeLightEWS();
