@@ -14,8 +14,8 @@
 using namespace std;
 
 #define BLANK " \t\n\r"
-#define BEGIN '{'
-#define END '}'
+#define BEGIN "{"
+#define END "}"
 #define PERIOD '.'
 
 class Lex {
@@ -28,7 +28,9 @@ private:
 	}
 	bool isDelimeter(char c) {
 		if (isBlank(c)) return true;
-		if (c==BEGIN || c==END) return true;
+		string chars;
+		chars.append(1, c);
+		if (chars==BEGIN || chars==END) return true;
 		return false;
 	}
 	bool isDigit(char c) {
@@ -40,29 +42,35 @@ private:
 		return false;
 	}
 
-	void readBlank(ifstream &fin) {
+	void readBlanks(ifstream &fin) {
 		fin.get(this->lookahead);
 		while(isBlank(this->lookahead) && !fin.eof()) {
-			if (fin.eof()) return;
 			fin.get(this->lookahead);
 		}
 	}
-	void readDelimeter(ifstream &fin) {
+	void readDelimeters(ifstream &fin) {
 		fin.get(this->lookahead);
 		while(isDelimeter(this->lookahead) && !fin.eof()) {
-			if (fin.eof()) return;
 			fin.get(this->lookahead);
 		}
 	}
-	string readDigit(ifstream &fin) {
-		string digits;
-		fin.get(this->lookahead);
-		while(isDigit(this->lookahead)) {
-			if (fin.eof()) return digits;
+	string readDigits(ifstream &fin) {
+		string token;
+		while (isDigit(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
 			fin.get(this->lookahead);
 		}
+		return token;
+	}
+	string readPeriod(ifstream &fin) {
+		string token;
+		if (isPeriod(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
+			fin.get(this->lookahead);
+		}
+		return token;
+	}
 
-	}
 
 public:
 	Lex(): lookahead(0) {}
@@ -70,11 +78,8 @@ public:
 
 	int readInt(ifstream &fin) {
 		string token;
-		this->readBlank(fin);
-		while (isDigit(this->lookahead) && !fin.eof()) {
-			token.append(1, this->lookahead);
-			fin.get(this->lookahead);
-		}
+		this->readBlanks(fin);
+		token = readDigits(fin);
 		if (token.empty()) throw new exception();
 
 		stringstream ss;
@@ -84,18 +89,17 @@ public:
 		return result;
 	}
 
-	int readFloat(ifstream &fin) {
+	float readFloat(ifstream &fin) {
 		string token;
-		this->readBlank(fin);
-		while (isDigit(this->lookahead) && !fin.eof()) {
-			token.append(1, this->lookahead);
-			fin.get(this->lookahead);
-		}
-		if (token.empty()) throw exception;
+		this->readBlanks(fin);
+		token.append(readDigits(fin));
+		token.append(readPeriod(fin));
+		token.append(readDigits(fin));
+		if (token.empty()) throw new exception();
 
 		stringstream ss;
 		ss << token;
-		int result;
+		float result;
 		ss >> result;
 		return result;
 	}

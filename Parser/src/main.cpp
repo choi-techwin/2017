@@ -15,13 +15,14 @@ int main() {
 	try {
 		Parser parser;
 		parser.open("rsc/data.txt");
-		int result;
-		result = parser.readInt();
-		cout << result << endl;
-		result = parser.readInt();
-		cout << result << endl;
-		result = parser.readInt();
-		cout << result << endl;
+		int rInt;
+		float rFloat;
+
+		rInt = parser.readInt();
+		cout << rInt << endl;
+		rFloat = parser.readFloat();
+		cout << rFloat << endl;
+
 		parser.close();
 	} catch (exception& e) {
 		cout << e.what();

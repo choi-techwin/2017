@@ -32,6 +32,9 @@ public:
 	int readInt() {
 		return lex.readInt(fin);
 	}
+	int readFloat() {
+		return lex.readFloat(fin);
+	}
 };
 
 
