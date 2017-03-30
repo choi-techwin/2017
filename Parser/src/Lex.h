@@ -9,28 +9,39 @@
 #define LEX_H_
 
 #include <string>
-#include <sstream>
 #include <fstream>
 using namespace std;
 
-#define BLANK " \t\n\r"
-#define BEGIN "{"
-#define END "}"
-#define PERIOD '.'
+static string BLANK (" \t\n\r\0");
+static string BEGIN ("{");
+static string END("}");
+static string PERIOD(".");
 
 class Lex {
 private:
+	ifstream* pFin;
 	char lookahead;
 
 	bool isBlank(char c) {
 		if (string(BLANK).find(c) != string::npos) return true;
 		return false;
 	}
+	bool isBegin(char c) {
+		string token;
+		token.append(1, c);
+		if (token.compare(BEGIN)== 0) return true;
+		return false;
+	}
+	bool isEnd(char c) {
+		string token;
+		token.append(1, c);
+		if (token.compare(END) == 0) return true;
+		return false;
+	}
 	bool isDelimeter(char c) {
-		if (isBlank(c)) return true;
-		string chars;
-		chars.append(1, c);
-		if (chars==BEGIN || chars==END) return true;
+		if (this->isBlank(c)) return true;
+		if (this->isBegin(c)) return true;
+		if (this->isEnd(c)) return true;
 		return false;
 	}
 	bool isDigit(char c) {
@@ -38,72 +49,96 @@ private:
 		return false;
 	}
 	bool isPeriod(char c) {
-		if (c == PERIOD) return true;
+		string token;
+		token.append(1, c);
+		if (token.compare(PERIOD) == 0) return true;
 		return false;
 	}
 
-	void readBlanks(ifstream &fin) {
-		fin.get(this->lookahead);
-		while(isBlank(this->lookahead) && !fin.eof()) {
-			fin.get(this->lookahead);
+	void readBlanks() {
+		while(this->isBlank(this->lookahead) && !pFin->eof()) {
+			pFin->get(this->lookahead);
 		}
 	}
-	void readDelimeters(ifstream &fin) {
-		fin.get(this->lookahead);
-		while(isDelimeter(this->lookahead) && !fin.eof()) {
-			fin.get(this->lookahead);
-		}
-	}
-	string readDigits(ifstream &fin) {
+	string readDigits() {
 		string token;
-		while (isDigit(this->lookahead) && !fin.eof()) {
+		while (this->isDigit(this->lookahead) && !pFin->eof()) {
 			token.append(1, this->lookahead);
-			fin.get(this->lookahead);
+			pFin->get(this->lookahead);
 		}
 		return token;
 	}
-	string readPeriod(ifstream &fin) {
+	string readPeriod() {
 		string token;
-		if (isPeriod(this->lookahead) && !fin.eof()) {
+		if (this->isPeriod(this->lookahead) && !pFin->eof()) {
 			token.append(1, this->lookahead);
-			fin.get(this->lookahead);
+			pFin->get(this->lookahead);
 		}
 		return token;
 	}
-
+	string readChars() {
+		string token;
+		while(!this->isDelimeter(this->lookahead) && !pFin->eof()) {
+			token.append(1, this->lookahead);
+			pFin->get(this->lookahead);
+		}
+		return token;
+	}
+	string readBeginToken() {
+		string token;
+		if (this->isBegin(this->lookahead) && !pFin->eof()) {
+			token.append(1, this->lookahead);
+			pFin->get(this->lookahead);
+		}
+		return token;
+	}
+	string readEndToken() {
+		string token;
+		if (this->isEnd(this->lookahead) && !pFin->eof()) {
+			token.append(1, this->lookahead);
+			pFin->get(this->lookahead);
+		}
+		return token;
+	}
 
 public:
-	Lex(): lookahead(0) {}
+	Lex(ifstream* pFin): pFin(pFin), lookahead(0) {}
 	virtual ~Lex() {}
 
-	int readInt(ifstream &fin) {
+	bool eof() { return pFin->eof(); }
+
+	string readBegin() {
 		string token;
-		this->readBlanks(fin);
-		token = readDigits(fin);
-		if (token.empty()) throw new exception();
-
-		stringstream ss;
-		ss << token;
-		int result;
-		ss >> result;
-		return result;
+		this->readBlanks();
+		token = readBeginToken();
+		return token;
 	}
-
-	float readFloat(ifstream &fin) {
+	string readEnd() {
 		string token;
-		this->readBlanks(fin);
-		token.append(readDigits(fin));
-		token.append(readPeriod(fin));
-		token.append(readDigits(fin));
-		if (token.empty()) throw new exception();
-
-		stringstream ss;
-		ss << token;
-		float result;
-		ss >> result;
-		return result;
+		this->readBlanks();
+		token = readEndToken();
+		return token;
 	}
-
+	string readInt() {
+		string token;
+		this->readBlanks();
+		token = readDigits();
+		return token;
+	}
+	string readFloat() {
+		string token;
+		this->readBlanks();
+		token.append(readDigits());
+		token.append(readPeriod());
+		token.append(readDigits());
+		return token;
+	}
+	string readString() {
+		string token;
+		this->readBlanks();
+		token = readChars();
+		return token;
+	}
 };
 
 #endif /* LEX_H_ */

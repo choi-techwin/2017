@@ -13,17 +13,10 @@ using namespace std;
 
 int main() {
 	try {
-		Parser parser;
-		parser.open("rsc/data.txt");
-		int rInt;
-		float rFloat;
+		Parser parser("rsc", "videoManager");
+		parser.read();
 
-		rInt = parser.readInt();
-		cout << rInt << endl;
-		rFloat = parser.readFloat();
-		cout << rFloat << endl;
-
-		parser.close();
+		parser.write();
 	} catch (exception& e) {
 		cout << e.what();
 	}

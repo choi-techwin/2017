@@ -1,4 +1,4 @@
-VideoManager videoManager {
+videoManager {
    att1 1
    videoProfile {
      att4 4.5
