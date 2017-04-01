@@ -6,19 +6,24 @@
  */
 
 #include "Parser.h"
-
-#include <iostream>
-#include <exception>
-using namespace std;
+#include "VideoManager.h"
+#include "Exception.h"
 
 int main() {
 	try {
-		Parser parser("rsc", "videoManager");
-		parser.read();
+		string pathName = "rsc";
+		string fileName = "data";
+
+		Parser parser;
+		parser.read(pathName, fileName);
+		VideoManager videoManager("videoManager");
+		parser >> videoManager;
 
 		parser.write();
-	} catch (exception& e) {
-		cout << e.what();
+		videoManager.write();
+
+	} catch (Exception& e) {
+		e.what();
 	}
 }
 

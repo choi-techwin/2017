@@ -12,10 +12,17 @@
 #include <fstream>
 using namespace std;
 
-static string BLANK (" \t\n\r\0");
-static string BEGIN ("{");
-static string END("}");
-static string PERIOD(".");
+#include "Exception.h"
+
+#define BLANKS " \t\n\r"
+#define BEGIN '{'
+#define END '}'
+#define PERIOD '.'
+#define ZERO '0'
+#define NINE '9'
+
+#define PATHSEPARATOR "/"
+#define EXTENSION ".txt"
 
 class Lex {
 private:
@@ -23,19 +30,17 @@ private:
 	char lookahead;
 
 	bool isBlank(char c) {
-		if (string(BLANK).find(c) != string::npos) return true;
+		string token;
+		token.append(BLANKS);
+		if (token.find(c) != string::npos) return true;
 		return false;
 	}
 	bool isBegin(char c) {
-		string token;
-		token.append(1, c);
-		if (token.compare(BEGIN)== 0) return true;
+		if (c == BEGIN) return true;
 		return false;
 	}
 	bool isEnd(char c) {
-		string token;
-		token.append(1, c);
-		if (token.compare(END) == 0) return true;
+		if (c == END) return true;
 		return false;
 	}
 	bool isDelimeter(char c) {
@@ -45,13 +50,11 @@ private:
 		return false;
 	}
 	bool isDigit(char c) {
-		if (c>='0' && c<='9') return true;
+		if (c >= ZERO && c <= NINE) return true;
 		return false;
 	}
 	bool isPeriod(char c) {
-		string token;
-		token.append(1, c);
-		if (token.compare(PERIOD) == 0) return true;
+		if (c == PERIOD) return true;
 		return false;
 	}
 
@@ -102,41 +105,58 @@ private:
 	}
 
 public:
-	Lex(ifstream* pFin): pFin(pFin), lookahead(0) {}
-	virtual ~Lex() {}
+	Lex(): lookahead(BLANKS[0]) {
+		this->pFin = new ifstream();
+	}
+	virtual ~Lex() {
+		delete this->pFin;
+	}
 
+	void open(string path, string objectName) throw() {
+		string fullName;
+		fullName.append(path);
+		fullName.append(PATHSEPARATOR);
+		fullName.append(objectName);
+		fullName.append(EXTENSION);
+		this->pFin->open(fullName.c_str());
+		if (!this->pFin->is_open())
+			throw Exception(1);
+	}
+	void close() {
+		this->pFin->close();
+	}
 	bool eof() { return pFin->eof(); }
 
 	string readBegin() {
 		string token;
 		this->readBlanks();
-		token = readBeginToken();
+		token = this->readBeginToken();
 		return token;
 	}
 	string readEnd() {
 		string token;
 		this->readBlanks();
-		token = readEndToken();
+		token = this->readEndToken();
 		return token;
 	}
 	string readInt() {
 		string token;
 		this->readBlanks();
-		token = readDigits();
+		token = this->readDigits();
 		return token;
 	}
 	string readFloat() {
 		string token;
 		this->readBlanks();
-		token.append(readDigits());
-		token.append(readPeriod());
-		token.append(readDigits());
+		token.append(this->readDigits());
+		token.append(this->readPeriod());
+		token.append(this->readDigits());
 		return token;
 	}
 	string readString() {
 		string token;
 		this->readBlanks();
-		token = readChars();
+		token = this->readChars();
 		return token;
 	}
 };
