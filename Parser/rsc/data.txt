@@ -1,1 +1,9 @@
- 3 34.2 4 .56 
+videoManager {
+   att1 1
+   videoProfile {
+     att4 4.5
+     att5 insert
+     att3 3
+   }
+   att2 2
+}
