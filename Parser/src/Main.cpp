@@ -7,20 +7,31 @@
 
 #include "Parser.h"
 #include "VideoManager.h"
-#include "Exception.h"
 
 int main() {
 	try {
-		string pathName = "rsc";
-		string fileName = "data";
+		VideoManager videoManager1;
+		VideoManager videoManager2;
+		VideoManager videoManager3;
 
 		Parser parser;
-		parser.read(pathName, fileName);
-		VideoManager videoManager("videoManager");
-		parser >> videoManager;
+		parser.openIn("rsc", "input");
+		// read file and build parse tree
+		parser.read();
+		// load data to a class
+		parser.load(videoManager3, "videoManager3");
+		parser.load(videoManager1, "videoManager1");
+		parser.load(videoManager2, "videoManager2");
+		parser.closeIn();
 
+		parser.openOut("rsc", "output");
+		// load data to the parser
+		parser.store(videoManager1, "videoManager1");
+		parser.store(videoManager3, "videoManager3");
+		parser.store(videoManager2, "videoManager2");
+		// write to the file
 		parser.write();
-		videoManager.write();
+		parser.closeOut();
 
 	} catch (Exception& e) {
 		e.what();

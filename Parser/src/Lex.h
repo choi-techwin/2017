@@ -6,7 +6,7 @@
  */
 
 #ifndef LEX_H_
-#define LEX_H_
+#define LEX_H_ "LEX_H_"
 
 #include <string>
 #include <fstream>
@@ -15,6 +15,9 @@ using namespace std;
 #include "Exception.h"
 
 #define BLANKS " \t\n\r"
+#define SPACE ' '
+#define TAB '\t'
+#define NEWLINE '\n'
 #define BEGIN '{'
 #define END '}'
 #define PERIOD '.'
@@ -27,7 +30,10 @@ using namespace std;
 class Lex {
 private:
 	ifstream* pFin;
+	ofstream* pFout;
+
 	char lookahead;
+	int tabCount;
 
 	bool isBlank(char c) {
 		string token;
@@ -104,28 +110,46 @@ private:
 		return token;
 	}
 
-public:
-	Lex(): lookahead(BLANKS[0]) {
-		this->pFin = new ifstream();
+
+	void tabIndentation() {
+		this->tabCount++;
 	}
-	virtual ~Lex() {
-		delete this->pFin;
+	void untabIndentation() {
+		this->tabCount--;
+	}
+	void writeIndentation() {
+		for (int i=0; i<this->tabCount; i++) {
+			pFout->put(TAB);
+		}
 	}
 
-	void open(string path, string objectName) throw() {
+	string getFullName(string path, string objectName) {
 		string fullName;
 		fullName.append(path);
 		fullName.append(PATHSEPARATOR);
 		fullName.append(objectName);
 		fullName.append(EXTENSION);
+		return fullName;
+	}
+
+public:
+	Lex(): pFin(0), pFout(0), lookahead(BLANKS[0]), tabCount(0) {}
+	virtual ~Lex() {}
+
+	void openIn(string path, string fileName) throw() {
+		string fullName = this->getFullName(path, fileName);
+
+		this->pFin = new ifstream();
 		this->pFin->open(fullName.c_str());
 		if (!this->pFin->is_open())
-			throw Exception(1);
-	}
-	void close() {
-		this->pFin->close();
+			throw Exception(LEX_H_, "openIn", fullName);
 	}
 	bool eof() { return pFin->eof(); }
+	void closeIn() {
+		this->pFin->close();
+		if (this->pFin != 0)
+			delete this->pFin;
+	}
 
 	string readBegin() {
 		string token;
@@ -158,6 +182,39 @@ public:
 		this->readBlanks();
 		token = this->readChars();
 		return token;
+	}
+
+	void openOut(string path, string fileName) throw() {
+		string fullName = this->getFullName(path, fileName);
+
+		this->pFout = new ofstream();
+		this->pFout->open(fullName.c_str());
+		if (!this->pFout->is_open())
+			throw Exception(LEX_H_, "openOut", fullName);
+		this->tabCount = 0;
+	}
+	void closeOut() {
+		this->pFout->close();
+		if (this->pFout != 0)
+			delete this->pFout;
+	}
+
+	void writeBegin() {
+		(*pFout) << SPACE << BEGIN << NEWLINE;
+		tabIndentation();
+	}
+	void writeEnd() {
+		untabIndentation();
+		this->writeIndentation();
+		(*pFout) << END << NEWLINE;
+	}
+	void writeKey(string token) {
+		this->writeIndentation();
+		(*pFout) << token;
+	}
+	void writeValue(string token) {
+		(*pFout) << SPACE << token;
+		pFout->put(NEWLINE);
 	}
 };
 

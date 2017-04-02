@@ -14,23 +14,22 @@ class VideoProfile: public Serializable {
 private:
 	int att3;
 	float att4;
-
+	string att5;
 public:
-	VideoProfile(string key): Serializable(key) {
+	VideoProfile() {
 		this->att3 = 5;
 		this->att4 = 2.3;
 	}
 	virtual ~VideoProfile() {}
 	void write() {
-		cout << this->getKey() << endl;
-		cout << BEGIN << endl;
-		cout << "att3 " << this->att3 << endl;
-		cout << "att4 " << this->att4 << endl;
-		cout << END << endl;
+		this->setValue(this->att3, "att30");
+		this->setValue(this->att4, "att40");
+		this->setValue(this->att5, "att50");
 	}
 	void read() {
-		att3 = this->getInt("att3");
-		att4 = this->getFloat("att4");
+		this->getValue(this->att3, "att30");
+		this->getValue(this->att4, "att40");
+		this->getValue(this->att5, "att50");
 	}
 };
 
@@ -41,25 +40,21 @@ private:
 	float att2;
 
 public:
-	VideoManager(string key): Serializable(key), videoProfile("videoProfile") {
+	VideoManager() {
 		this->att1 = 5;
 		this->att2 = 2.3;
 	}
 	virtual ~VideoManager() {}
 
 	void write() {
-		cout << this->getKey() << endl;
-		cout << BEGIN << endl;
-		cout << "att1 " << this->att1 << endl;
-		videoProfile.write();
-		cout << "att2 " << this->att2 << endl;
-		cout << END << endl;
+		this->setValue(this->att1, "att10");
+		this->setValue(this->videoProfile, "videoProfile");
+		this->setValue(this->att2, "att20");
 	}
-
 	void read() {
-		this->att1 = this->getInt("att1");
-		this->videoProfile << this->getStructure("videoProfile");
-		this->att2 = this->getFloat("att2");
+		this->getValue(att1, "att10");
+		this->getValue(videoProfile, "videoProfile");
+		this->getValue(att2, "att20");
 	}
 };
 

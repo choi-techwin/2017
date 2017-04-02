@@ -6,55 +6,62 @@
  */
 
 #ifndef PARSER_H_
-#define PARSER_H_
-
-#include "Lex.h"
-#include <iostream>
-#include <map>
-#include <sstream>
+#define PARSER_H_  "PARSER_H_"
 
 #include "Exception.h"
-#include "Serializable.h"
+#include "Lex.h"
 #include "Structure.h"
+#include "Serializable.h"
+
 using namespace std;
 
-
-class Parser {
+class Parser: public Serializable {
 private:
 	Lex lex;
 	string path, fileName;
-	Structure structure;
-private:
-	void open(string path, string fileName) throw() {
+public:
+	Parser() {}
+	virtual ~Parser() {}
+
+	void openIn(string path, string fileName) throw() {
 		this->path = path;
 		this->fileName = fileName;
-		this->lex.open(path, fileName);
+		this->lex.openIn(path, fileName);
+		// top-level structure key
+		this->getStructure().setKey(this->fileName);
 	}
-	void close() throw() {
-		this->lex.close();
+	// store parsed data to a class
+	void read() throw() {
+		this->getStructure().read(&(this->lex), this->fileName);
+	}
+	void load(Serializable& serializable, string key) throw() {
+		this->getValue(serializable, key);
+	}
+	void closeIn() throw() {
+		this->getStructure().clearElements();
+		this->lex.closeIn();
 	}
 
-public:
-	Parser(): structure(&lex) {
-	}
-	virtual ~Parser() {
-	}
+	void openOut(string path, string fileName) throw() {
+		this->path = path;
+		this->fileName = fileName;
+		this->lex.openOut(path, fileName);
 
-	void read(string path, string fileName) throw() {
-		// open file
-		this->open(path, fileName);
-		// top level structures
-		this->structure.readBody(fileName);
-		// close file
-		this->close();
+		this->getStructure().setKey(this->fileName);
+	}
+	// write data to a file
+	void store(Serializable& serializable, string key) {
+		this->setValue(serializable, key);
 	}
 	void write() throw() {
-		cout << this->structure.getKey();
-		this->structure.write();
+		this->getStructure().write(&(this->lex));
 	}
-	void operator>>(Serializable& serializable) {
-		serializable << this->structure.getSubStructure(serializable.getKey());
+	void closeOut() throw() {
+		this->getStructure().clearElements();
+		this->lex.closeOut();
 	}
+
+
 };
 
 

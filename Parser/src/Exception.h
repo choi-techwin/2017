@@ -6,7 +6,7 @@
  */
 
 #ifndef EXCEPTION_H_
-#define EXCEPTION_H_
+#define EXCEPTION_H_ "EXCEPTION_H_"
 
 #include <exception>
 #include <iostream>
@@ -16,42 +16,72 @@ using namespace std;
 static map<int, string> exceptionTypeMsges;
 static map<int, string> exceptionCauseMsges;
 
-class Exception: public exception {
+class Message {
 private:
+	string moduleName;
+	string functionName;
+	string cause;
 
-	int type;
-	int componentId;
-	int methodId;
-	int cause;
+	string message;
+
+	void append(string moduleName, string functionName, string cause) {
+		this->moduleName = moduleName;
+		this->functionName = functionName;
+		this->cause = cause;
+
+		message.append(this->moduleName);
+		message.append("::");
+		message.append(this->functionName);
+		message.append(" ");
+		message.append(this->cause);
+	}
+public:
+	Message() {}
+	Message(string moduleName, string functionName, string cause) {
+		append(moduleName, functionName, cause);
+	}
+
+	const string& get() {
+		return this->message;
+	}
+	void set(string moduleName, string functionName, string cause) {
+		append(moduleName, functionName, cause);
+	}
+	void setCause(string& cause) {
+		this->cause = cause;
+	}
+
+	void show() {
+		cout << message;
+	}
+	void show(string moduleName, string functionName, string cause) {
+		append(moduleName, functionName, cause);
+		cout << message;
+	}
+
+} MESSAGE;
+
+class Exception: public exception {
 public:
 	enum EExceptionType {eFile, ePARSER, eLEX};
 	enum EExceptionCause {eFILEOPEN, eFILEREAD, eFILEWRITE};
 
-	Exception(int type) {
-		this->type = type;
-		this->componentId = 0;
-		this->methodId = 0;
-		this->cause = 0;
+	Exception(string cause) {
+		MESSAGE.setCause(cause);
 	}
-	Exception(int type, int componentId, int methodId, int cause) {
-		this->type = type;
-		this->componentId = componentId;
-		this->methodId = methodId;
-		this->cause = cause;
+	Exception(string moduleName, string functionName, string cause) {
+		MESSAGE.set(moduleName, functionName, cause);
 	}
 	virtual ~Exception() throw() {
 	}
 
-	void setLocation(int componentId, int methodId) {
-		this->componentId = componentId;
-		this->methodId = methodId;
+	void setCause(string& cause) {
+		MESSAGE.setCause(cause);
 	}
-	void setCause(int cause) {
-		this->cause = cause;
-	}
-	virtual void what() {
-		cout << type << componentId << methodId << cause;
+	const char* what() const throw() {
+		return MESSAGE.get().c_str();
 	}
 };
+
 
 #endif /* EXCEPTION_H_ */
