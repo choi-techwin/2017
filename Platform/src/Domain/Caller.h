@@ -14,7 +14,6 @@
 enum eventType { eInvoke = __COUNTER__ };
 
 class ReturnValue: public ValueObject {
-
 };
 
 class Caller: public EventTarget
