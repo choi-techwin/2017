@@ -9,6 +9,7 @@
 #define ELEMENT_H_ "ELEMENT_H_"
 
 #include "Exception.h"
+#include "Lex.h"
 #include <string>
 using namespace std;
 

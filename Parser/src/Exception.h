@@ -50,32 +50,36 @@ public:
 	}
 
 	void show() {
-		cout << message;
+		cout << message << endl;
+	}
+	void show(string message) {
+		this->message = message;
+		cout << message << endl;
 	}
 	void show(string moduleName, string functionName, string cause) {
 		append(moduleName, functionName, cause);
-		cout << message;
+		cout << message << endl;
 	}
 
-} MESSAGE;
+} gMessage;
 
 
 class Exception: public exception {
 public:
 	Exception(string cause) {
-		MESSAGE.setCause(cause);
+		gMessage.setCause(cause);
 	}
 	Exception(string moduleName, string functionName, string cause) {
-		MESSAGE.set(moduleName, functionName, cause);
+		gMessage.set(moduleName, functionName, cause);
 	}
 	virtual ~Exception() throw() {
 	}
 
 	void setCause(string& cause) {
-		MESSAGE.setCause(cause);
+		gMessage.setCause(cause);
 	}
 	const char* what() const throw() {
-		return MESSAGE.get().c_str();
+		return gMessage.get().c_str();
 	}
 };
 

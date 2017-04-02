@@ -8,6 +8,7 @@
 #ifndef SERIALIZABLE_H_
 #define SERIALIZABLE_H_ "SERIALIZABLE_H_"
 
+#include "Exception.h"
 #include "Structure.h"
 #include <string>
 #include <sstream>
@@ -25,7 +26,7 @@ public:
 
 	// get Serializable data from Structures
 	virtual void read()=0;
-	void getValue(Serializable& serializable, string key) throw() {
+	void get(Serializable& serializable, string key) throw() {
 		// find a child structure named key
 		Structure *pElement = (Structure*) this->structure.getElement(key);
 		if (pElement==NULL) {
@@ -36,10 +37,10 @@ public:
 		// fill each field
 		serializable.read();
 	}
-	void getValue(int& result, string key) {
+	void get(int& result, string key) {
 		Element *pElement = this->structure.getElement(key);
 		if (pElement==NULL) {
-			MESSAGE.show(SERIALIZABLE_H_, "getValue-not found", key);
+			gMessage.show(SERIALIZABLE_H_, "getValue-not found", key);
 			return;
 		}
 		string token = pElement->getValue();
@@ -47,10 +48,10 @@ public:
 		ss << token;
 		ss >> result;
 	}
-	void getValue(float& result, string key) {
+	void get(float& result, string key) {
 		Element *pElement = this->structure.getElement(key);
 		if (pElement==NULL) {
-			MESSAGE.show(SERIALIZABLE_H_, "getValue-not found", key);
+			gMessage.show(SERIALIZABLE_H_, "getValue-not found", key);
 			return;
 		}
 		string token = pElement->getValue();
@@ -58,10 +59,10 @@ public:
 		ss << token;
 		ss >> result;
 	}
-	void getValue(string& result, string key){
+	void get(string& result, string key){
 		Element *pElement = this->structure.getElement(key);
 		if (pElement==NULL) {
-			MESSAGE.show(SERIALIZABLE_H_, "getValue-not found", key);
+			gMessage.show(SERIALIZABLE_H_, "getValue-not found", key);
 			return;
 		}
 		result = pElement->getValue();
@@ -70,7 +71,7 @@ public:
 	// create Structures from Serializable data
 	virtual void write()=0;
 	// load data to child serializable structure
-	void setValue(Serializable& serializable, string key) throw() {
+	void set(Serializable& serializable, string key) throw() {
 		// clear child serializable structure's elements
 		serializable.getStructure().clearElements();
 		// set the child serializable key as a provided key
@@ -80,21 +81,21 @@ public:
 		// write serializable data to the associated structure
 		serializable.write();
 	}
-	void setValue(int& value, string key) throw() {
+	void set(int& value, string key) throw() {
 		stringstream ss;
 		ss << value;
 		string result;
 		ss >> result;
 		this->structure.addElement(key, result);
 	}
-	void setValue(float& value, string key) throw() {
+	void set(float& value, string key) throw() {
 		stringstream ss;
 		ss << value;
 		string result;
 		ss >> result;
 		this->structure.addElement(key, result);
 	}
-	void setValue(string& value, string key) throw() {
+	void set(string& value, string key) throw() {
 		this->structure.addElement(key, value);
 	}
 };

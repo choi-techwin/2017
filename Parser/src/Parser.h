@@ -31,7 +31,7 @@ public:
 		this->getStructure().read(this->lex, this->fileName);
 	}
 	void load(Serializable& serializable, string key) throw() {
-		this->getValue(serializable, key);
+		this->get(serializable, key);
 	}
 	void closeIn() throw() {
 		this->getStructure().clearElements();
@@ -47,7 +47,7 @@ public:
 	}
 	// write data to a file
 	void store(Serializable& serializable, string key) throw() {
-		this->setValue(serializable, key);
+		this->set(serializable, key);
 	}
 	void write() throw() {
 		this->getStructure().write(this->lex);

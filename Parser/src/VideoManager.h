@@ -22,14 +22,14 @@ public:
 	}
 	virtual ~VideoProfile() {}
 	void write() {
-		this->setValue(this->att3, "att30");
-		this->setValue(this->att4, "att40");
-		this->setValue(this->att5, "att50");
+		this->set(this->att3, "att30");
+		this->set(this->att4, "att40");
+		this->set(this->att5, "att50");
 	}
 	void read() {
-		this->getValue(this->att3, "att30");
-		this->getValue(this->att4, "att40");
-		this->getValue(this->att5, "att50");
+		this->get(this->att3, "att30");
+		this->get(this->att4, "att40");
+		this->get(this->att5, "att50");
 	}
 };
 
@@ -47,14 +47,14 @@ public:
 	virtual ~VideoManager() {}
 
 	void write() {
-		this->setValue(this->att1, "att10");
-		this->setValue(this->videoProfile, "videoProfile");
-		this->setValue(this->att2, "att20");
+		this->set(this->att1, "att10");
+		this->set(this->videoProfile, "videoProfile");
+		this->set(this->att2, "att20");
 	}
 	void read() {
-		this->getValue(att1, "att10");
-		this->getValue(videoProfile, "videoProfile");
-		this->getValue(att2, "att20");
+		this->get(att1, "att10");
+		this->get(videoProfile, "videoProfile");
+		this->get(att2, "att20");
 	}
 };
 
