@@ -20,10 +20,17 @@ private:
 	map<string, Element*> elements;
 public:
 	Structure() {}
-	virtual ~Structure() {}
+	virtual ~Structure() {
+	}
 	bool isStructure() { return true; }
 
 	void clearElements() {
+		for (map<string, Element*>::iterator itr=elements.begin(); itr!=elements.end(); itr++) {
+			if (itr->second->isStructure()) {
+				Structure* pStructure = (Structure*)itr->second;
+				pStructure->clearElements();
+			}
+		}
 		this->elements.clear();
 	}
 	Element *getElement(string key) throw() {

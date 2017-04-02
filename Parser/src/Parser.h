@@ -19,12 +19,15 @@ private:
 	string path, fileName;
 public:
 	Parser() {}
-	virtual ~Parser() {}
+	virtual ~Parser() {
+		this->getStructure().clearElements();
+	}
 
 	void openIn(string path, string fileName) throw() {
 		this->path = path;
 		this->fileName = fileName;
 		this->lex.openIn(path, fileName);
+		this->getStructure().clearElements();
 	}
 	// store parsed data to a class
 	void read() throw() {
@@ -34,7 +37,6 @@ public:
 		this->get(serializable, key);
 	}
 	void closeIn() throw() {
-		this->getStructure().clearElements();
 		this->lex.closeIn();
 	}
 
@@ -42,8 +44,7 @@ public:
 		this->path = path;
 		this->fileName = fileName;
 		this->lex.openOut(path, fileName);
-
-		this->getStructure().setKey(this->fileName);
+		this->getStructure().clearElements();
 	}
 	// write data to a file
 	void store(Serializable& serializable, string key) throw() {
@@ -53,7 +54,6 @@ public:
 		this->getStructure().write(this->lex);
 	}
 	void closeOut() throw() {
-		this->getStructure().clearElements();
 		this->lex.closeOut();
 	}
 
