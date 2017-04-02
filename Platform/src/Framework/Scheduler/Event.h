@@ -10,6 +10,7 @@ private:
 	int targetID;
 	int targetSchedulerID;
 	ValueObject *pArg;
+	int iArg;
 
 public:
 	// constructors
@@ -34,4 +35,7 @@ public:
 
 	ValueObject *getPArg() { return this->pArg; }
 	void setPArg(ValueObject *pArg) { this->pArg = pArg; }
+
+	int getIArg() { return this->iArg; }
+	void setIArg(int iArg) { this->iArg = iArg; }
 };
