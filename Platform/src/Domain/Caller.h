@@ -21,9 +21,7 @@ class Caller: public EventTarget
 private:
 	int calleeID;
 public:
-	Caller() {
-
-	}
+	Caller() { this->calleeID = 0; }
 	virtual ~Caller() {}
 
 	int initialize() {

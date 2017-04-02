@@ -19,7 +19,7 @@ public:
 	}
 
 	int targetFunction() {
-
+		return 0;
 	}
 
 	vector<Event> generateEventQueue() {
