@@ -8,13 +8,11 @@
 #ifndef EXCEPTION_H_
 #define EXCEPTION_H_ "EXCEPTION_H_"
 
+#include <string>
 #include <exception>
 #include <iostream>
-#include <map>
-using namespace std;
 
-static map<int, string> exceptionTypeMsges;
-static map<int, string> exceptionCauseMsges;
+using namespace std;
 
 class Message {
 private:
@@ -61,11 +59,9 @@ public:
 
 } MESSAGE;
 
+
 class Exception: public exception {
 public:
-	enum EExceptionType {eFile, ePARSER, eLEX};
-	enum EExceptionCause {eFILEOPEN, eFILEREAD, eFILEWRITE};
-
 	Exception(string cause) {
 		MESSAGE.setCause(cause);
 	}

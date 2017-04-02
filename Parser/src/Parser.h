@@ -8,9 +8,7 @@
 #ifndef PARSER_H_
 #define PARSER_H_  "PARSER_H_"
 
-#include "Exception.h"
 #include "Lex.h"
-#include "Structure.h"
 #include "Serializable.h"
 
 using namespace std;
@@ -27,12 +25,10 @@ public:
 		this->path = path;
 		this->fileName = fileName;
 		this->lex.openIn(path, fileName);
-		// top-level structure key
-		this->getStructure().setKey(this->fileName);
 	}
 	// store parsed data to a class
 	void read() throw() {
-		this->getStructure().read(&(this->lex), this->fileName);
+		this->getStructure().read(this->lex, this->fileName);
 	}
 	void load(Serializable& serializable, string key) throw() {
 		this->getValue(serializable, key);
@@ -50,11 +46,11 @@ public:
 		this->getStructure().setKey(this->fileName);
 	}
 	// write data to a file
-	void store(Serializable& serializable, string key) {
+	void store(Serializable& serializable, string key) throw() {
 		this->setValue(serializable, key);
 	}
 	void write() throw() {
-		this->getStructure().write(&(this->lex));
+		this->getStructure().write(this->lex);
 	}
 	void closeOut() throw() {
 		this->getStructure().clearElements();

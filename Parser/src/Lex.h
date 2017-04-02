@@ -8,11 +8,11 @@
 #ifndef LEX_H_
 #define LEX_H_ "LEX_H_"
 
+#include "Exception.h"
+
 #include <string>
 #include <fstream>
 using namespace std;
-
-#include "Exception.h"
 
 #define BLANKS " \t\n\r"
 #define SPACE ' '
@@ -29,11 +29,11 @@ using namespace std;
 
 class Lex {
 private:
-	ifstream* pFin;
-	ofstream* pFout;
+	ifstream fin;
+	ofstream fout;
 
 	char lookahead;
-	int tabCount;
+	string tabs;
 
 	bool isBlank(char c) {
 		string token;
@@ -65,62 +65,57 @@ private:
 	}
 
 	void readBlanks() {
-		while(this->isBlank(this->lookahead) && !pFin->eof()) {
-			pFin->get(this->lookahead);
+		while(this->isBlank(this->lookahead) && !fin.eof()) {
+			fin.get(this->lookahead);
 		}
 	}
 	string readDigits() {
 		string token;
-		while (this->isDigit(this->lookahead) && !pFin->eof()) {
+		while (this->isDigit(this->lookahead) && !fin.eof()) {
 			token.append(1, this->lookahead);
-			pFin->get(this->lookahead);
+			fin.get(this->lookahead);
 		}
 		return token;
 	}
 	string readPeriod() {
 		string token;
-		if (this->isPeriod(this->lookahead) && !pFin->eof()) {
+		if (this->isPeriod(this->lookahead) && !fin.eof()) {
 			token.append(1, this->lookahead);
-			pFin->get(this->lookahead);
+			fin.get(this->lookahead);
 		}
 		return token;
 	}
 	string readChars() {
 		string token;
-		while(!this->isDelimeter(this->lookahead) && !pFin->eof()) {
+		while(!this->isDelimeter(this->lookahead) && !fin.eof()) {
 			token.append(1, this->lookahead);
-			pFin->get(this->lookahead);
+			fin.get(this->lookahead);
 		}
 		return token;
 	}
 	string readBeginToken() {
 		string token;
-		if (this->isBegin(this->lookahead) && !pFin->eof()) {
+		if (this->isBegin(this->lookahead) && !fin.eof()) {
 			token.append(1, this->lookahead);
-			pFin->get(this->lookahead);
+			fin.get(this->lookahead);
 		}
 		return token;
 	}
 	string readEndToken() {
 		string token;
-		if (this->isEnd(this->lookahead) && !pFin->eof()) {
+		if (this->isEnd(this->lookahead) && !fin.eof()) {
 			token.append(1, this->lookahead);
-			pFin->get(this->lookahead);
+			fin.get(this->lookahead);
 		}
 		return token;
 	}
 
 
 	void tabIndentation() {
-		this->tabCount++;
+		this->tabs.push_back(TAB);
 	}
 	void untabIndentation() {
-		this->tabCount--;
-	}
-	void writeIndentation() {
-		for (int i=0; i<this->tabCount; i++) {
-			pFout->put(TAB);
-		}
+		this->tabs.erase(0, 1);
 	}
 
 	string getFullName(string path, string objectName) {
@@ -133,22 +128,19 @@ private:
 	}
 
 public:
-	Lex(): pFin(0), pFout(0), lookahead(BLANKS[0]), tabCount(0) {}
+	Lex(): lookahead(BLANKS[0]) {}
 	virtual ~Lex() {}
 
 	void openIn(string path, string fileName) throw() {
 		string fullName = this->getFullName(path, fileName);
 
-		this->pFin = new ifstream();
-		this->pFin->open(fullName.c_str());
-		if (!this->pFin->is_open())
+		this->fin.open(fullName.c_str());
+		if (!this->fin.is_open())
 			throw Exception(LEX_H_, "openIn", fullName);
 	}
-	bool eof() { return pFin->eof(); }
+	bool eof() { return fin.eof(); }
 	void closeIn() {
-		this->pFin->close();
-		if (this->pFin != 0)
-			delete this->pFin;
+		this->fin.close();
 	}
 
 	string readBegin() {
@@ -187,34 +179,28 @@ public:
 	void openOut(string path, string fileName) throw() {
 		string fullName = this->getFullName(path, fileName);
 
-		this->pFout = new ofstream();
-		this->pFout->open(fullName.c_str());
-		if (!this->pFout->is_open())
+		this->fout.open(fullName.c_str());
+		if (!this->fout.is_open())
 			throw Exception(LEX_H_, "openOut", fullName);
-		this->tabCount = 0;
+		this->tabs.clear();
 	}
 	void closeOut() {
-		this->pFout->close();
-		if (this->pFout != 0)
-			delete this->pFout;
+		this->fout.close();
 	}
 
 	void writeBegin() {
-		(*pFout) << SPACE << BEGIN << NEWLINE;
+		fout << SPACE << BEGIN << NEWLINE;
 		tabIndentation();
 	}
 	void writeEnd() {
 		untabIndentation();
-		this->writeIndentation();
-		(*pFout) << END << NEWLINE;
+		fout << this->tabs << END << NEWLINE;
 	}
 	void writeKey(string token) {
-		this->writeIndentation();
-		(*pFout) << token;
+		fout << this->tabs << token;
 	}
 	void writeValue(string token) {
-		(*pFout) << SPACE << token;
-		pFout->put(NEWLINE);
+		fout << SPACE << token << NEWLINE;
 	}
 };
 

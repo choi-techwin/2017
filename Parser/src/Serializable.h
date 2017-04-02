@@ -14,9 +14,8 @@
 using namespace std;
 
 class Serializable {
-protected:
+private:
 	Structure structure;
-
 public:
 	Serializable() {}
 	virtual ~Serializable() {}
@@ -25,13 +24,16 @@ public:
 	void setStructure(Structure& structure) { this->structure = structure; }
 
 	// get Serializable data from Structures
-	virtual void read() {};
+	virtual void read()=0;
 	void getValue(Serializable& serializable, string key) throw() {
+		// find a child structure named key
 		Structure *pElement = (Structure*) this->structure.getElement(key);
 		if (pElement==NULL) {
 			throw Exception(SERIALIZABLE_H_, "getValueSerializable-not found", key);
 		}
+		// associate the serializable with a found structure
 		serializable.setStructure(*pElement);
+		// fill each field
 		serializable.read();
 	}
 	void getValue(int& result, string key) {
@@ -66,13 +68,16 @@ public:
 	}
 
 	// create Structures from Serializable data
-	virtual void write() {};
-
+	virtual void write()=0;
+	// load data to child serializable structure
 	void setValue(Serializable& serializable, string key) throw() {
+		// clear child serializable structure's elements
 		serializable.getStructure().clearElements();
+		// set the child serializable key as a provided key
 		serializable.getStructure().setKey(key);
+		// add the child serializable structure as my structure's element
 		this->structure.addElement(&(serializable.getStructure()));
-
+		// write serializable data to the associated structure
 		serializable.write();
 	}
 	void setValue(int& value, string key) throw() {

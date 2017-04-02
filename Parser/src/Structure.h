@@ -8,43 +8,20 @@
 #ifndef STRUCTURE_H_
 #define STRUCTURE_H_ "STRUCTURE_H_"
 
+#include "Exception.h"
+#include "Element.h"
 #include <string>
+#include <map>
+
 using namespace std;
-
-class Element {
-private:
-	string key;
-	string value;
-public:
-	bool isStructure;
-	Element()  { isStructure = false; }
-	virtual ~Element() {}
-
-	const string& getKey() const {return key;}
-	void setKey(const string& key) {this->key = key;}
-
-	const string& getValue() const {return value;}
-	void setValue(const string& value) {this->value = value;}
-
-	virtual void read(Lex *pLex, string key) throw() {
-		this->setKey(key);
-		string value = pLex->readString();
-		if (value.empty())
-			throw Exception(STRUCTURE_H_, "Element::read", key);
-		this->setValue(value);
-	}
-	virtual void write(Lex *pLex) throw() {
-		pLex->writeKey(this->key);
-		pLex->writeValue(this->value);
-	}
-};
 
 class Structure: public Element {
 private:
 	map<string, Element*> elements;
 public:
-	Structure() { this->isStructure = true; }
+	Structure() {}
 	virtual ~Structure() {}
+	bool isStructure() { return true; }
 
 	void clearElements() {
 		this->elements.clear();
@@ -65,36 +42,36 @@ public:
 		this->elements.insert(make_pair(key, pElement));
 	}
 
-	void read(Lex *pLex, string key) throw() {
+	void read(Lex& lex, string key) throw() {
 		this->setKey(key);
 		// read while(not end);
-		while (pLex->readEnd().empty() && !pLex->eof()) {
+		while (lex.readEnd().empty() && !lex.eof()) {
 			// read key
-			string elementdKey = pLex->readString();
+			string elementdKey = lex.readString();
 			if (elementdKey.empty())
 				throw Exception(STRUCTURE_H_, "Structure::read", key);
 			// generate new element
 			Element* pElement = 0;
-			if (pLex->readBegin().empty()) {
+			if (lex.readBegin().empty()) {
 				pElement = new Element();
 			} else {
 				pElement = new Structure();
 			}
 			// read element data
-			pElement->read(pLex, elementdKey);
+			pElement->read(lex, elementdKey);
 			// add element
 			this->addElement(pElement);
 		}
 	}
-	void write(Lex *pLex) throw() {
+	void write(Lex& lex) throw() {
 		for (map<string, Element*>::iterator itr=elements.begin(); itr!=elements.end(); itr++) {
-			pLex->writeKey((*itr).second->getKey());
-			if ((*itr).second->isStructure) {
-				pLex->writeBegin();
-				(*itr).second->write(pLex);
-				pLex->writeEnd();
+			lex.writeKey((*itr).second->getKey());
+			if ((*itr).second->isStructure()) {
+				lex.writeBegin();
+				(*itr).second->write(lex);
+				lex.writeEnd();
 			} else {
-				pLex->writeValue((*itr).second->getValue());
+				lex.writeValue((*itr).second->getValue());
 
 			}
 		}
