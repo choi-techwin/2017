@@ -51,11 +51,11 @@ void MainScheduler::collectEventsFromSchedulers() {
 }
 
 void MainScheduler::run() {
-	vector<thread *> threadVector;
-	for (map<int, Scheduler *>::iterator itrScheduler = this->schedulerMap.begin(); itrScheduler != this->schedulerMap.end(); itrScheduler++) {
-		thread *t = new thread(&Scheduler::run, itrScheduler->second);
-		threadVector.push_back(t);
-	}
+//	vector<thread *> threadVector;
+//	for (map<int, Scheduler *>::iterator itrScheduler = this->schedulerMap.begin(); itrScheduler != this->schedulerMap.end(); itrScheduler++) {
+//		thread *t = new thread(&Scheduler::run, itrScheduler->second);
+//		threadVector.push_back(t);
+//	}
 
 	while (this->getState() != eCOMPONENT_STOPPED) {
 		// MainScheduler Components
@@ -69,7 +69,7 @@ void MainScheduler::run() {
 //		scanf("%c", &c);
 	}
 
-	for (vector<thread *>::iterator itrThread = threadVector.begin(); itrThread != threadVector.end(); itrThread++) {
-		(*itrThread)->join();
-	}
+//	for (vector<thread *>::iterator itrThread = threadVector.begin(); itrThread != threadVector.end(); itrThread++) {
+//		(*itrThread)->join();
+//	}
 }

@@ -11,11 +11,6 @@
 #include "../../Framework/Component/EventTarget.h"
 #include "Callee.h"
 
-enum eventType { eInvoke = __COUNTER__ };
-
-class ReturnValue: public ValueObject {
-};
-
 class Caller: public EventTarget
 {
 private:

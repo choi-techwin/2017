@@ -15,6 +15,7 @@ private:
 	vector<Sensor *> sensorVector;
 protected:
 	vector<EventTargetID> eventTargetIDVector;
+	vector<Event> eventQueue;;
 public:
 	EventSource() {}
 	virtual ~EventSource() {}
@@ -30,7 +31,8 @@ public:
 	void addSensor(Sensor *pSensor) { this->sensorVector.push_back(pSensor); }
 	vector<Sensor *> getSensorVector() { return this->sensorVector; }
 
-	virtual vector<Event> generateEventQueue() = 0;
+	virtual vector<Event> generateEventQueue() { return eventQueue; };
+	virtual void setEvent(Event event) { this->eventQueue.push_back(event); };
 };
 
 

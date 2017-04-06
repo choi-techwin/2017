@@ -10,7 +10,6 @@ public:
 	virtual ~ValueObject() {}
 
 	virtual int initialize() { return 0; }
-	virtual ValueObject *deepCopy() { return 0; }
 	virtual void setValue(void* pValue) { this->pValue = pValue; }
 	virtual void* getValue() { return this->pValue; }
 };

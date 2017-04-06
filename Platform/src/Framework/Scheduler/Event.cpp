@@ -6,6 +6,7 @@ Event::Event() {
 	this->targetID = 0;
 	this->targetSchedulerID = 0;
 	this->pArg = 0;
+	this->iArg = 0;
 }
 
 Event::~Event() {
@@ -13,12 +14,12 @@ Event::~Event() {
 		delete this->pArg;
 }
 
-Event *Event::deepCopy() {
-	Event *pEvent = new Event();
-	pEvent->type=this->type;
-	pEvent->sourceID=this->sourceID;
-	pEvent->targetID=this->targetID;
-	pEvent->targetSchedulerID=this->targetSchedulerID;
-	pEvent->pArg = this->pArg->deepCopy();
-	return pEvent;
-}
+//Event *Event::deepCopy() {
+//	Event *pEvent = new Event();
+//	pEvent->type=this->type;
+//	pEvent->sourceID=this->sourceID;
+//	pEvent->targetID=this->targetID;
+//	pEvent->targetSchedulerID=this->targetSchedulerID;
+//	pEvent->pArg = this->pArg->deepCopy();
+//	return pEvent;
+//}

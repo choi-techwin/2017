@@ -18,7 +18,7 @@ public:
 	virtual ~Event();
 
 	// methods
-	virtual Event *deepCopy();
+//	virtual Event *deepCopy();
 
 	// getters & setters
 	int getType() { return this->type; }
