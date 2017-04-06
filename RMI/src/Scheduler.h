@@ -5,8 +5,8 @@
  *      Author: choi.sungwoon
  */
 
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef SCHEDULER_H_
+#define SCHEDULER_H_
 
 #include <string>
 #include <vector>
@@ -15,44 +15,57 @@ using namespace std;
 #include "Callee.h"
 #include "Caller.h"
 
-class Main {
+class Scheduler {
 private:
 	vector<Event*> events;
 public:
-	Main() {}
-	virtual ~Main() {}
-	void append(vector<Event*>& other) {
+	Scheduler() {}
+	virtual ~Scheduler() {}
+	void append(vector<Event*> other) {
 		for (vector<Event*>::iterator itr=other.begin(); itr!=other.end(); itr++) {
 			this->events.push_back((*itr));
 		}
 	}
 	void execute() {
-		Callee callee(1);
-		Caller caller(2);
+		// new Components
+		Caller caller(1);
+		Callee callee(2);
+		// event-based function invocation association
 		caller.associate(callee.getId());
 
-		Event event;
-		event.setType(eStart);
-		event.setTargetID(2);
-		events.push_back(&event);
+		// prepare start event: caller::eStart
+		Event* pEvent = new Event();
+		pEvent->setType(eStart);
+		pEvent->setTargetID(caller.getId());
+		events.push_back(pEvent);
 
 		while(true) {
-			Event* pEvent = this->events.front();
-			if (pEvent!=0) {
+			// dequeue
+			if (!this->events.empty()) {
+				// dequeue a event
+				pEvent = this->events.front();
 				this->events.erase(this->events.begin());
+
+				// dispatch a event to a target component
 				if (pEvent->getTargetID() == caller.getId()) {
-					caller.processAllEvent(pEvent);
+					caller.processAllEvents(pEvent);
 				} else if (pEvent->getTargetID() == callee.getId()) {
-					callee.processAllEvent(pEvent);
+					callee.processAllEvents(pEvent);
 				}
 			}
+
+			// get events from eventSources
 			vector<Event*> buffer;
-			buffer = caller.generateAllEvents();
+
+			buffer = caller.generateEvents();
 			this->append(buffer);
-			buffer = callee.generateAllEvents();
+			caller.clearEvents();
+
+			buffer = callee.generateEvents();
 			this->append(buffer);
+			callee.clearEvents();
 		}
 	}
 };
 
-#endif /* MAIN_H_ */
+#endif /* SCHEDULER_H_ */

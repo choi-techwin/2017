@@ -15,8 +15,11 @@ public:
 	Callee(int id): CalleeSkeleton(id) {}
 	virtual ~Callee() {}
 
-	virtual Results* targetFunction(Parameters *pParameters) {
-		return 0;
+	virtual Results* targetFunction(Args* pArgs) {
+		cout << "Callee::targetFunction(" << pArgs->getArg() <<  ")" << endl;
+		Results* pResults = new Results();
+		pResults->setResult(pArgs->getArg()+1);
+		return pResults;
 	}
 };
 

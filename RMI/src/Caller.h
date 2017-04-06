@@ -9,31 +9,46 @@
 #define CALLER_H_
 
 #include "CallerStub.h"
-#include "Callee.h"
 
 enum ECallerEvent { eStart=__COUNTER__ };
 
 class Caller: public CallerStub {
 private:
 	int calleeId;
+	bool wait;
 public:
-	Caller(int id): CallerStub(id), calleeId(0) {}
+	Caller(int id): CallerStub(id), calleeId(0), wait(false) {}
 	virtual ~Caller() {}
 
 	void associate(int calleeId) {
 		this->calleeId = calleeId;
 	}
 	void processEvent(Event* pEvent) {
+		Args *pArgs;
+		Results* pResults;
+
 		switch(pEvent->getType()) {
-		case eStart:
-			Parameters parameters;
-			invoke(this->calleeId, eTargetFunction, parameters);
-			break;
-		case eTargetFunction:
-//			Results* pResults = (Results*)(pEvent->getPArg());
-			break;
-		default:
-			break;
+		if (wait) {
+			this->setEvent(pEvent);
+		}
+		else {
+			case eStart:
+				cout << "Caller::processEvent - " << "eStart" << endl;
+				pArgs = new Args();
+				pArgs->setArg(3);
+				invoke(this->calleeId, eTargetFunction, pArgs);
+				// synchronous invocation
+				this->wait = true;
+				break;
+			case eTargetFunction:
+				cout << "Caller::processEvent - " << "eTargetFunction(" << endl;
+				pResults = (Results*)(pEvent->getPArg());
+				cout << "- return result = " << pResults->getResult() << endl;
+				this->wait = false;
+				break;
+			default:
+				break;
+			}
 		}
 	}
 };

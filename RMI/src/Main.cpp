@@ -5,10 +5,10 @@
  *      Author: choi.sungwoon
  */
 
-#include "Main.h"
+#include "Scheduler.h"
 
 int main() {
-	Main main;
-	main.execute();
+	Scheduler scheduler;
+	scheduler.execute();
 }
 
