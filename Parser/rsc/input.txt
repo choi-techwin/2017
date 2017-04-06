@@ -16,6 +16,7 @@ videoManager1 {
    }
    att20 20
    att10 10
+   
 }   videoManager3 {
    att20 200
    videoProfile {

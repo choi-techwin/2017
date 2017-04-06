@@ -21,6 +21,7 @@ public:
 		this->att4 = 2.3;
 	}
 	virtual ~VideoProfile() {}
+
 	void write() {
 		this->set(this->att3, "att30");
 		this->set(this->att4, "att40");

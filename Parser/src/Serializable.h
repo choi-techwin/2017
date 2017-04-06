@@ -26,6 +26,7 @@ public:
 
 	// get Serializable data from Structures
 	virtual void read()=0;
+
 	void get(Serializable& serializable, string key) throw() {
 		// find a child structure named key
 		Structure *pElement = (Structure*) this->structure.getElement(key);

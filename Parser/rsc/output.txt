@@ -8,12 +8,12 @@ videoManager1 {
 	}
 }
 videoManager2 {
-	att10 10
-	att20 20
+	att10 1
+	att20 2
 	videoProfile {
-		att30 30
-		att40 40.5
-		att50 insert2
+		att30 3
+		att40 4.5
+		att50 insert1
 	}
 }
 videoManager3 {

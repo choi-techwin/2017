@@ -25,7 +25,7 @@ public:
 			// read file and build parse tree
 			parser.read();
 			// load data to a class
-			parser.load(videoManager2, "videoManager2");
+			parser.load(videoManager2, "videoManager1");
 			parser.load(videoManager3, "videoManager3");
 			parser.load(videoManager1, "videoManager1");
 			parser.closeIn();
