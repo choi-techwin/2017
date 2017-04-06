@@ -61,8 +61,9 @@ public:
 		cout << message << endl;
 	}
 
-} gMessage;
+};
 
+ extern Message gMessage;
 
 class Exception: public exception {
 public:

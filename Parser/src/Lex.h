@@ -20,6 +20,8 @@ using namespace std;
 #define NEWLINE '\n'
 #define BEGIN '{'
 #define END '}'
+#define INDEXBEGIN '['
+#define INDEXEND ']'
 #define PERIOD '.'
 #define ZERO '0'
 #define NINE '9'
@@ -49,10 +51,21 @@ private:
 		if (c == END) return true;
 		return false;
 	}
+	bool isIndexBegin(char c) {
+		if (c == INDEXBEGIN) return true;
+		return false;
+	}
+	bool isIndexEnd(char c) {
+		if (c == INDEXEND) return true;
+		return false;
+	}
+
 	bool isDelimeter(char c) {
 		if (this->isBlank(c)) return true;
 		if (this->isBegin(c)) return true;
 		if (this->isEnd(c)) return true;
+		if (this->isIndexBegin(c)) return true;
+		if (this->isIndexEnd(c)) return true;
 		return false;
 	}
 	bool isDigit(char c) {
@@ -109,7 +122,22 @@ private:
 		}
 		return token;
 	}
-
+	string readIndexBeginToken() {
+		string token;
+		if (this->isIndexBegin(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
+			fin.get(this->lookahead);
+		}
+		return token;
+	}
+	string readIndexEndToken() {
+		string token;
+		if (this->isIndexEnd(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
+			fin.get(this->lookahead);
+		}
+		return token;
+	}
 
 	void tabIndentation() {
 		this->tabs.push_back(TAB);
@@ -155,6 +183,19 @@ public:
 		token = this->readEndToken();
 		return token;
 	}
+	string readIndexBegin() {
+		string token;
+		this->readBlanks();
+		token = this->readIndexBeginToken();
+		return token;
+	}
+	string readIndexEnd() {
+		string token;
+		this->readBlanks();
+		token = this->readIndexEndToken();
+		return token;
+	}
+
 	string readInt() {
 		string token;
 		this->readBlanks();
@@ -196,6 +237,13 @@ public:
 		untabIndentation();
 		fout << this->tabs << END << NEWLINE;
 	}
+	void writeIndexBegin() {
+		fout << INDEXBEGIN;
+	}
+	void writeIndexEnd() {
+		fout << INDEXEND;
+	}
+
 	void writeKey(string token) {
 		fout << this->tabs << token;
 	}

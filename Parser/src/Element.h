@@ -18,28 +18,20 @@ private:
 	string key;
 	string value;
 public:
-	Element() {}
-	virtual ~Element() {}
+	Element();
+	virtual ~Element();
 
-	virtual bool isStructure() { return false; }
+	bool isArray();
+	virtual bool isStructure();
 
-	const string& getKey() const {return key;}
-	void setKey(const string& key) {this->key = key;}
+	const string& getKey() const;
+	void setKey(const string& key);
 
-	const string& getValue() const {return value;}
-	void setValue(const string& value) {this->value = value;}
+	const string& getValue() const;
+	void setValue(const string& value);
 
-	virtual void read(Lex& lex, string key) throw() {
-		this->setKey(key);
-		string value = lex.readString();
-		if (value.empty())
-			throw Exception(ELEMENT_H_, "read-value", key);
-		this->setValue(value);
-	}
-	virtual void write(Lex& lex) throw() {
-		lex.writeKey(this->key);
-		lex.writeValue(this->value);
-	}
+	virtual void read(Lex& lex, string key) throw();
+	virtual void write(Lex& lex) throw();
 };
 
 #endif /* ELEMENT_H_ */

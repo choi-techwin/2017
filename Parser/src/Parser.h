@@ -18,20 +18,20 @@ private:
 	Lex lex;
 	string path, fileName;
 public:
-	Parser() {}
+	Parser() { this->setStructure(new Structure()); }
 	virtual ~Parser() {
-		this->getStructure().clearElements();
+		this->getStructure()->clearElements();
 	}
 
 	void openIn(string path, string fileName) throw() {
 		this->path = path;
 		this->fileName = fileName;
 		this->lex.openIn(path, fileName);
-		this->getStructure().clearElements();
+		this->getStructure()->clearElements();
 	}
 	// store parsed data to a class
 	void read() throw() {
-		this->getStructure().read(this->lex, this->fileName);
+		this->getStructure()->read(this->lex, this->fileName);
 	}
 	void load(Serializable& serializable, string key) throw() {
 		this->get(serializable, key);
@@ -44,14 +44,14 @@ public:
 		this->path = path;
 		this->fileName = fileName;
 		this->lex.openOut(path, fileName);
-		this->getStructure().clearElements();
+		this->getStructure()->clearElements();
 	}
 	// write data to a file
 	void store(Serializable& serializable, string key) throw() {
 		this->set(serializable, key);
 	}
 	void write() throw() {
-		this->getStructure().write(this->lex);
+		this->getStructure()->write(this->lex);
 	}
 	void closeOut() throw() {
 		this->lex.closeOut();

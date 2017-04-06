@@ -7,7 +7,7 @@ videoManager1 {
 		att50 insert1
 	}
 }
-videoManager2 {
+videoManager1 {
 	att10 1
 	att20 2
 	videoProfile {

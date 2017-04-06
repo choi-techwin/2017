@@ -15,10 +15,13 @@ private:
 	int att3;
 	float att4;
 	string att5;
+	int a [2];
 public:
 	VideoProfile() {
+		// default
 		this->att3 = 5;
 		this->att4 = 2.3;
+//		this->a = {1, 2};
 	}
 	virtual ~VideoProfile() {}
 
@@ -39,6 +42,7 @@ private:
 	int att1;
 	VideoProfile videoProfile;
 	float att2;
+	int array[2];
 
 public:
 	VideoManager() {
@@ -51,11 +55,13 @@ public:
 		this->set(this->att1, "att10");
 		this->set(this->videoProfile, "videoProfile");
 		this->set(this->att2, "att20");
+//		this->set(this->array, "arrayA");
 	}
 	void read() {
 		this->get(att1, "att10");
 		this->get(videoProfile, "videoProfile");
 		this->get(att2, "att20");
+		this->get(array, 2, "arrayA");
 	}
 };
 
