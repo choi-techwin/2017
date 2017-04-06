@@ -6,34 +6,59 @@
  */
 
 #ifndef PARSER_H_
-#define PARSER_H_
+#define PARSER_H_  "PARSER_H_"
 
 #include "Lex.h"
+#include "Serializable.h"
 
-class Parser {
+using namespace std;
+
+class Parser: public Serializable {
 private:
 	Lex lex;
-	ifstream fin;
+	string path, fileName;
 public:
-	Parser(): lex() {
-
-	}
-	virtual ~Parser() {}
-
-	void open(string fileName) {
-		this->fin.open(fileName.c_str());
-		if (!this->fin.is_open())
-			throw new exception();
-	}
-	void close() {
-		fin.close();
+	Parser() {}
+	virtual ~Parser() {
+		this->getStructure().clearElements();
 	}
 
-	int readInt() {
-		return lex.readInt(fin);
+	void openIn(string path, string fileName) throw() {
+		this->path = path;
+		this->fileName = fileName;
+		this->lex.openIn(path, fileName);
+		this->getStructure().clearElements();
 	}
+	// store parsed data to a class
+	void read() throw() {
+		this->getStructure().read(this->lex, this->fileName);
+	}
+	void load(Serializable& serializable, string key) throw() {
+		this->get(serializable, key);
+	}
+	void closeIn() throw() {
+		this->lex.closeIn();
+	}
+
+	void openOut(string path, string fileName) throw() {
+		this->path = path;
+		this->fileName = fileName;
+		this->lex.openOut(path, fileName);
+		this->getStructure().clearElements();
+	}
+	// write data to a file
+	void store(Serializable& serializable, string key) throw() {
+		this->set(serializable, key);
+	}
+	void write() throw() {
+		this->getStructure().write(this->lex);
+	}
+	void closeOut() throw() {
+		this->lex.closeOut();
+	}
+
+
 };
-
 
 
 #endif /* PARSER_H_ */

@@ -1,0 +1,27 @@
+videoManager1 {
+	att10 1
+	att20 2
+	videoProfile {
+		att30 3
+		att40 4.5
+		att50 insert1
+	}
+}
+videoManager2 {
+	att10 1
+	att20 2
+	videoProfile {
+		att30 3
+		att40 4.5
+		att50 insert1
+	}
+}
+videoManager3 {
+	att10 5
+	att20 200
+	videoProfile {
+		att30 300
+		att40 400.5
+		att50 insert3
+	}
+}

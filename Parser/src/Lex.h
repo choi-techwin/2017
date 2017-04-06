@@ -6,33 +6,57 @@
  */
 
 #ifndef LEX_H_
-#define LEX_H_
+#define LEX_H_ "LEX_H_"
+
+#include "Exception.h"
 
 #include <string>
-#include <sstream>
 #include <fstream>
 using namespace std;
 
-#define BLANK " \t\n\r"
+#define BLANKS " \t\n\r"
+#define SPACE ' '
+#define TAB '\t'
+#define NEWLINE '\n'
 #define BEGIN '{'
 #define END '}'
 #define PERIOD '.'
+#define ZERO '0'
+#define NINE '9'
+
+#define PATHSEPARATOR "/"
+#define EXTENSION ".txt"
 
 class Lex {
 private:
+	ifstream fin;
+	ofstream fout;
+
 	char lookahead;
+	string tabs;
 
 	bool isBlank(char c) {
-		if (string(BLANK).find(c) != string::npos) return true;
+		string token;
+		token.append(BLANKS);
+		if (token.find(c) != string::npos) return true;
+		return false;
+	}
+	bool isBegin(char c) {
+		if (c == BEGIN) return true;
+		return false;
+	}
+	bool isEnd(char c) {
+		if (c == END) return true;
 		return false;
 	}
 	bool isDelimeter(char c) {
-		if (isBlank(c)) return true;
-		if (c==BEGIN || c==END) return true;
+		if (this->isBlank(c)) return true;
+		if (this->isBegin(c)) return true;
+		if (this->isEnd(c)) return true;
 		return false;
 	}
 	bool isDigit(char c) {
-		if (c>='0' && c<='9') return true;
+		if (c >= ZERO && c <= NINE) return true;
 		return false;
 	}
 	bool isPeriod(char c) {
@@ -40,66 +64,144 @@ private:
 		return false;
 	}
 
-	void readBlank(ifstream &fin) {
-		fin.get(this->lookahead);
-		while(isBlank(this->lookahead) && !fin.eof()) {
-			if (fin.eof()) return;
+	void readBlanks() {
+		while(this->isBlank(this->lookahead) && !fin.eof()) {
 			fin.get(this->lookahead);
 		}
 	}
-	void readDelimeter(ifstream &fin) {
-		fin.get(this->lookahead);
-		while(isDelimeter(this->lookahead) && !fin.eof()) {
-			if (fin.eof()) return;
+	string readDigits() {
+		string token;
+		while (this->isDigit(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
 			fin.get(this->lookahead);
 		}
+		return token;
 	}
-	string readDigit(ifstream &fin) {
-		string digits;
-		fin.get(this->lookahead);
-		while(isDigit(this->lookahead)) {
-			if (fin.eof()) return digits;
+	string readPeriod() {
+		string token;
+		if (this->isPeriod(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
 			fin.get(this->lookahead);
 		}
+		return token;
+	}
+	string readChars() {
+		string token;
+		while(!this->isDelimeter(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
+			fin.get(this->lookahead);
+		}
+		return token;
+	}
+	string readBeginToken() {
+		string token;
+		if (this->isBegin(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
+			fin.get(this->lookahead);
+		}
+		return token;
+	}
+	string readEndToken() {
+		string token;
+		if (this->isEnd(this->lookahead) && !fin.eof()) {
+			token.append(1, this->lookahead);
+			fin.get(this->lookahead);
+		}
+		return token;
+	}
 
+
+	void tabIndentation() {
+		this->tabs.push_back(TAB);
+	}
+	void untabIndentation() {
+		this->tabs.erase(0, 1);
+	}
+
+	string getFullName(string path, string objectName) {
+		string fullName;
+		fullName.append(path);
+		fullName.append(PATHSEPARATOR);
+		fullName.append(objectName);
+		fullName.append(EXTENSION);
+		return fullName;
 	}
 
 public:
-	Lex(): lookahead(0) {}
+	Lex(): lookahead(BLANKS[0]) {}
 	virtual ~Lex() {}
 
-	int readInt(ifstream &fin) {
-		string token;
-		this->readBlank(fin);
-		while (isDigit(this->lookahead) && !fin.eof()) {
-			token.append(1, this->lookahead);
-			fin.get(this->lookahead);
-		}
-		if (token.empty()) throw new exception();
+	void openIn(string path, string fileName) throw() {
+		string fullName = this->getFullName(path, fileName);
 
-		stringstream ss;
-		ss << token;
-		int result;
-		ss >> result;
-		return result;
+		this->fin.open(fullName.c_str());
+		if (!this->fin.is_open())
+			throw Exception(LEX_H_, "openIn", fullName);
+	}
+	bool eof() { return fin.eof(); }
+	void closeIn() {
+		this->fin.close();
 	}
 
-	int readFloat(ifstream &fin) {
+	string readBegin() {
 		string token;
-		this->readBlank(fin);
-		while (isDigit(this->lookahead) && !fin.eof()) {
-			token.append(1, this->lookahead);
-			fin.get(this->lookahead);
-		}
-		if (token.empty()) throw exception;
-
-		stringstream ss;
-		ss << token;
-		int result;
-		ss >> result;
-		return result;
+		this->readBlanks();
+		token = this->readBeginToken();
+		return token;
+	}
+	string readEnd() {
+		string token;
+		this->readBlanks();
+		token = this->readEndToken();
+		return token;
+	}
+	string readInt() {
+		string token;
+		this->readBlanks();
+		token = this->readDigits();
+		return token;
+	}
+	string readFloat() {
+		string token;
+		this->readBlanks();
+		token.append(this->readDigits());
+		token.append(this->readPeriod());
+		token.append(this->readDigits());
+		return token;
+	}
+	string readString() {
+		string token;
+		this->readBlanks();
+		token = this->readChars();
+		return token;
 	}
 
+	void openOut(string path, string fileName) throw() {
+		string fullName = this->getFullName(path, fileName);
+
+		this->fout.open(fullName.c_str());
+		if (!this->fout.is_open())
+			throw Exception(LEX_H_, "openOut", fullName);
+		this->tabs.clear();
+	}
+	void closeOut() {
+		this->fout.close();
+	}
+
+	void writeBegin() {
+		fout << SPACE << BEGIN << NEWLINE;
+		tabIndentation();
+	}
+	void writeEnd() {
+		untabIndentation();
+		fout << this->tabs << END << NEWLINE;
+	}
+	void writeKey(string token) {
+		fout << this->tabs << token;
+	}
+	void writeValue(string token) {
+		fout << SPACE << token << NEWLINE;
+	}
 };
 
 #endif /* LEX_H_ */
