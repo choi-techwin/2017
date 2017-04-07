@@ -1,25 +1,49 @@
 videoManager1 {
+	arrayA {
+		 33
+		 44
+	}
 	att10 1
 	att20 2
 	videoProfile {
+		a {
+			 77
+			 66
+		}
 		att30 3
 		att40 4.5
 		att50 insert1
 	}
 }
-videoManager1 {
-	att10 1
-	att20 2
+videoManager2 {
+	arrayA {
+		 333
+		 444
+	}
+	att10 10
+	att20 20
 	videoProfile {
-		att30 3
-		att40 4.5
-		att50 insert1
+		a {
+			 77
+			 66
+		}
+		att30 30
+		att40 40.5
+		att50 insert2
 	}
 }
 videoManager3 {
+	arrayA {
+		 3333
+		 4444
+	}
 	att10 5
 	att20 200
 	videoProfile {
+		a {
+			 77
+			 66
+		}
 		att30 300
 		att40 400.5
 		att50 insert3

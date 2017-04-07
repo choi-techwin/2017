@@ -21,6 +21,7 @@ void Array::read(Lex& lex, string key) throw() {
 	lex.readBegin();
 
 	this->setKey(key);
+	gMessage.show("Array", "read", key);
 	// read while(not end);
 	int index = 0;
 	while (lex.readEnd().empty() && !lex.eof()) {
@@ -30,24 +31,23 @@ void Array::read(Lex& lex, string key) throw() {
 			pElement = new Structure();
 		} else if (!lex.readIndexBegin().empty()) {
 			pElement = new Array();
-		}
-		else {
+		} else {
 			pElement = new Element();
 		}
 		// read element data
 		stringstream ss;
 		ss << index;
-		string key;
-		ss >> key;
-		pElement->read(lex, key);
+		string Indexkey;
+		ss >> Indexkey;
+		pElement->read(lex, Indexkey);
 		index++;
 		// add element
 		this->addElement(pElement);
 	}
 }
+
 void Array::write(Lex& lex) throw() {
 	for (map<string, Element*>::iterator itr=elements.begin(); itr!=elements.end(); itr++) {
-		lex.writeKey((*itr).second->getKey());
 		if ((*itr).second->isStructure()) {
 			lex.writeBegin();
 			(*itr).second->write(lex);
@@ -57,8 +57,8 @@ void Array::write(Lex& lex) throw() {
 			lex.writeIndexEnd();
 			(*itr).second->write(lex);
 		} else {
+			lex.writeTab();
 			lex.writeValue((*itr).second->getValue());
-
 		}
 	}
 }

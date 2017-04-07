@@ -31,12 +31,6 @@ Element *Structure::getElement(string key) throw() {
 void Structure::addElement(Element *pElement) throw() {
 	this->elements.insert(make_pair(pElement->getKey(), pElement));
 }
-void Structure::addElement(string key, string value) throw() {
-	Element *pElement = new Element();
-	pElement->setKey(key);
-	pElement->setValue(value);
-	this->elements.insert(make_pair(key, pElement));
-}
 
 void Structure::read(Lex& lex, string key) throw() {
 	this->setKey(key);
@@ -44,6 +38,7 @@ void Structure::read(Lex& lex, string key) throw() {
 	while (lex.readEnd().empty() && !lex.eof()) {
 		// read key
 		string elementdKey = lex.readString();
+		gMessage.show("Structure", "read", key);
 		if (elementdKey.empty())
 			throw Exception(STRUCTURE_H_, "Structure::read", key);
 		// generate new element
@@ -52,8 +47,7 @@ void Structure::read(Lex& lex, string key) throw() {
 			pElement = new Structure();
 		} else if (!lex.readIndexBegin().empty()) {
 			pElement = new Array();
-		}
-		else {
+		} else {
 			pElement = new Element();
 		}
 		// read element data

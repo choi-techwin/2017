@@ -250,6 +250,12 @@ public:
 	void writeValue(string token) {
 		fout << SPACE << token << NEWLINE;
 	}
+	void writeTab() {
+		fout << this->tabs;
+	}
+	void writeEndl() {
+		fout << NEWLINE;
+	}
 };
 
 #endif /* LEX_H_ */

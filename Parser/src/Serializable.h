@@ -29,7 +29,6 @@ public:
 	void get(Serializable& serializable, string key) throw();
 	void get(int& result, string key);
 	void get(float& result, string key);
-;
 	void get(string& result, string key);
 	void get(int result[], int length, string key);
 
@@ -40,6 +39,7 @@ public:
 	void set(int& value, string key) throw();
 	void set(float& value, string key) throw();
 	void set(string& value, string key) throw();
+	void set(int* value, int length, string key) throw();
 };
 
 #endif /* SERIALIZABLE_H_ */

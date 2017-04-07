@@ -29,7 +29,6 @@ public:
 	void clearElements();
 	Element *getElement(string key) throw();
 	void addElement(Element *pElement) throw();
-	void addElement(string key, string value) throw();
 
 	void read(Lex& lex, string key) throw();
 	void write(Lex& lex) throw();

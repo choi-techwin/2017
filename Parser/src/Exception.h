@@ -16,23 +16,27 @@ using namespace std;
 
 class Message {
 private:
-	string moduleName;
-	string functionName;
-	string cause;
-
 	string message;
 
 	void append(string moduleName, string functionName, string cause) {
-		this->moduleName = moduleName;
-		this->functionName = functionName;
-		this->cause = cause;
-
-		message.append(this->moduleName);
+		message.clear();
+		message.append(moduleName);
 		message.append("::");
-		message.append(this->functionName);
+		message.append(functionName);
 		message.append(" ");
-		message.append(this->cause);
+		message.append(cause);
 	}
+	void append(string moduleName, string functionName, string cause1, string cause2) {
+		message.clear();
+		message.append(moduleName);
+		message.append("::");
+		message.append(functionName);
+		message.append(" ");
+		message.append(cause1);
+		message.append(" ");
+		message.append(cause2);
+	}
+
 public:
 	Message() {}
 	Message(string moduleName, string functionName, string cause) {
@@ -45,8 +49,11 @@ public:
 	void set(string moduleName, string functionName, string cause) {
 		append(moduleName, functionName, cause);
 	}
+	void set(string moduleName, string functionName, string cause1, string cause2) {
+		append(moduleName, functionName, cause1, cause2);
+	}
 	void setCause(string& cause) {
-		this->cause = cause;
+		this->message.append(cause);
 	}
 
 	void show() {
@@ -60,6 +67,11 @@ public:
 		append(moduleName, functionName, cause);
 		cout << message << endl;
 	}
+	void show(string moduleName, string functionName, string cause1, string cause2) {
+		append(moduleName, functionName, cause1, cause2);
+		cout << message << endl;
+	}
+
 
 };
 
@@ -73,6 +85,10 @@ public:
 	Exception(string moduleName, string functionName, string cause) {
 		gMessage.set(moduleName, functionName, cause);
 	}
+	Exception(string moduleName, string functionName, string cause1, string cause2) {
+		gMessage.set(moduleName, functionName, cause1, cause2);
+	}
+
 	virtual ~Exception() throw() {
 	}
 

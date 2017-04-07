@@ -23,6 +23,7 @@ void Element::read(Lex& lex, string key) throw() {
 	string value = lex.readString();
 	if (value.empty())
 		throw Exception(ELEMENT_H_, "read-value", key);
+	gMessage.show("Element", "read", key, value);
 	this->setValue(value);
 }
 void Element::write(Lex& lex) throw() {
