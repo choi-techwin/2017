@@ -230,7 +230,7 @@ public:
 	}
 
 	void writeBegin() {
-		fout << SPACE << BEGIN << NEWLINE;
+		fout << BEGIN << NEWLINE;
 		tabIndentation();
 	}
 	void writeEnd() {
@@ -249,6 +249,9 @@ public:
 	}
 	void writeValue(string token) {
 		fout << SPACE << token << NEWLINE;
+	}
+	void writeSpace() {
+		fout << SPACE;
 	}
 	void writeTab() {
 		fout << this->tabs;

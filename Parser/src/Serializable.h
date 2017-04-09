@@ -9,7 +9,7 @@
 #define SERIALIZABLE_H_ "SERIALIZABLE_H_"
 
 #include "Exception.h"
-#include "Structure.h"
+#include "Array.h"
 #include <string>
 #include <sstream>
 using namespace std;
@@ -17,6 +17,16 @@ using namespace std;
 class Serializable {
 private:
 	Structure *pStructure;
+
+	int getInt(string value);
+	float getFloat(string value);
+	string getString(int value);
+	string getString(float value);
+
+	Element* prepareElement(string key);
+	Structure* prepareStructure(string key);
+	Array* prepareArray(string key);
+
 public:
 	Serializable();
 	virtual ~Serializable();
@@ -27,10 +37,13 @@ public:
 	virtual void read() = 0;
 
 	void get(Serializable& serializable, string key) throw();
-	void get(int& result, string key);
-	void get(float& result, string key);
-	void get(string& result, string key);
-	void get(int result[], int length, string key);
+	void get(int& result, string key) throw();
+	void get(float& result, string key) throw();
+	void get(string& result, string key) throw() ;
+	void get(int result[], int length, string key) throw();
+	void get(float result[], int length, string key) throw();
+	void get(string result[], int length, string key) throw();
+	void get(Serializable* serializable, int index, string key) throw();
 
 	// create Structures from Serializable data
 	virtual void write() = 0;
@@ -39,7 +52,10 @@ public:
 	void set(int& value, string key) throw();
 	void set(float& value, string key) throw();
 	void set(string& value, string key) throw();
-	void set(int* value, int length, string key) throw();
+	void set(int value[], int length, string key) throw();
+	void set(float value[], int length, string key) throw();
+	void set(string value[], int length, string key) throw();
+	void set(Serializable* serializable, int index, string key) throw();
 };
 
 #endif /* SERIALIZABLE_H_ */

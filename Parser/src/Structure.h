@@ -8,23 +8,23 @@
 #ifndef STRUCTURE_H_
 #define STRUCTURE_H_ "STRUCTURE_H_"
 
-#include "Exception.h"
+
+#include "Map.h"
 #include "Element.h"
-//#include "Array.h"
 #include <string>
-#include <map>
+//#include <map>
 
 using namespace std;
 
-class Array;
 
 class Structure: public Element {
 protected:
-	map<string, Element*> elements;
+	Map elements;
 public:
 	Structure();
 	virtual ~Structure();
-	bool isStructure();
+
+	virtual ENodeType getType();
 
 	void clearElements();
 	Element *getElement(string key) throw();

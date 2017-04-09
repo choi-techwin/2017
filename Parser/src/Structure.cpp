@@ -4,32 +4,31 @@
  *  Created on: 2017. 4. 6.
  *      Author: choi.sungwoon
  */
-
+#include "Exception.h"
 #include "Structure.h"
 #include "Array.h"
 
 Structure::Structure() {}
-Structure::~Structure() {
-}
-bool Structure::isStructure() { return true; }
+Structure::~Structure() {}
+
+ENodeType Structure::getType() { return eStructure; }
 
 void Structure::clearElements() {
-	for (map<string, Element*>::iterator itr=elements.begin(); itr!=elements.end(); itr++) {
-		if (itr->second->isStructure()) {
-			Structure* pStructure = (Structure*)itr->second;
+	for (int i=0; i<elements.getLength(); i++) {
+		Element *pElement = elements.getElement(i);
+		if (pElement->getType() == eStructure) {
+			Structure* pStructure = (Structure*)pElement;
 			pStructure->clearElements();
 		}
 	}
 	this->elements.clear();
 }
 Element *Structure::getElement(string key) throw() {
-	map<string, Element*>::iterator itr = this->elements.find(key);
-	if (itr==elements.end())
-		return NULL;
-	return itr->second;
+	Element* pElement = this->elements.find(key);
+	return pElement;
 }
 void Structure::addElement(Element *pElement) throw() {
-	this->elements.insert(make_pair(pElement->getKey(), pElement));
+	this->elements.insert(pElement->getKey(), pElement);
 }
 
 void Structure::read(Lex& lex, string key) throw() {
@@ -57,18 +56,21 @@ void Structure::read(Lex& lex, string key) throw() {
 	}
 }
 void Structure::write(Lex& lex) throw() {
-	for (map<string, Element*>::iterator itr=elements.begin(); itr!=elements.end(); itr++) {
-		lex.writeKey((*itr).second->getKey());
-		if ((*itr).second->isStructure()) {
+	for (int i=0; i<elements.getLength(); i++) {
+		Element *pElement = elements.getElement(i);
+		lex.writeKey(pElement->getKey());
+		if (pElement->getType() == eStructure) {
 			lex.writeBegin();
-			(*itr).second->write(lex);
+			pElement->write(lex);
 			lex.writeEnd();
-		} else if ((*itr).second->isArray()) {
+		} else if (pElement->getType() == eArray) {
 			lex.writeIndexBegin();
 			lex.writeIndexEnd();
-			(*itr).second->write(lex);
+			lex.writeBegin();
+			pElement->write(lex);
+			lex.writeEnd();
 		} else {
-			lex.writeValue((*itr).second->getValue());
+			lex.writeValue(pElement->getValue());
 
 		}
 	}

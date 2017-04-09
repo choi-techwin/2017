@@ -15,7 +15,7 @@ public:
 	Array();
 	virtual ~Array();
 
-	bool isArray();
+	virtual ENodeType getType();
 
 	void read(Lex& lex, string key) throw();
 	void write(Lex& lex) throw();

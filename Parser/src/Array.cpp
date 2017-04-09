@@ -14,7 +14,7 @@ Array::Array() {
 Array::~Array() {
 }
 
-bool Array::isArray() { return true; }
+ENodeType Array::getType() { return eArray; }
 
 void Array::read(Lex& lex, string key) throw() {
 	lex.readIndexEnd();
@@ -47,18 +47,22 @@ void Array::read(Lex& lex, string key) throw() {
 }
 
 void Array::write(Lex& lex) throw() {
-	for (map<string, Element*>::iterator itr=elements.begin(); itr!=elements.end(); itr++) {
-		if ((*itr).second->isStructure()) {
+	for (int i=0; i<elements.getLength(); i++) {
+		Element *pElement = elements.getElement(i);
+		if (pElement->getType() == eStructure) {
+			lex.writeTab();
 			lex.writeBegin();
-			(*itr).second->write(lex);
+			pElement->write(lex);
 			lex.writeEnd();
-		} else if ((*itr).second->isArray()) {
+		} else if (pElement->getType() == eArray) {
 			lex.writeIndexBegin();
 			lex.writeIndexEnd();
-			(*itr).second->write(lex);
+			lex.writeBegin();
+			pElement->write(lex);
+			lex.writeEnd();
 		} else {
 			lex.writeTab();
-			lex.writeValue((*itr).second->getValue());
+			lex.writeValue(pElement->getValue());
 		}
 	}
 }

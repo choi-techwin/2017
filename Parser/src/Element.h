@@ -13,6 +13,8 @@
 #include <string>
 using namespace std;
 
+enum ENodeType {eElement, eStructure, eArray, eNone};
+
 class Element {
 private:
 	string key;
@@ -21,8 +23,7 @@ public:
 	Element();
 	virtual ~Element();
 
-	bool isArray();
-	virtual bool isStructure();
+	virtual ENodeType getType();
 
 	const string& getKey() const;
 	void setKey(const string& key);

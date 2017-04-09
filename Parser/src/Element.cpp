@@ -9,8 +9,7 @@
 Element::Element() {}
 Element::~Element() {}
 
-bool Element::isArray() { return false; }
-bool Element::isStructure() { return false; }
+ENodeType Element::getType() { return eElement; }
 
 const string& Element::getKey() const {return key;}
 void Element::setKey(const string& key) {this->key = key;}

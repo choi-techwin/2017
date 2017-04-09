@@ -38,13 +38,14 @@ public:
 		this->get(this->att4, "att40");
 		this->get(this->att5, "att50");
 		this->get(this->a, 2, "a");
+
 	}
 };
 
 class VideoManager: public Serializable {
 private:
 	int att1;
-	VideoProfile videoProfile;
+	VideoProfile videoProfile[2];
 	float att2;
 	int array[2];
 
@@ -59,21 +60,19 @@ public:
 	virtual ~VideoManager() {}
 
 	void read() {
-		this->get(array, 2, "arrayA");
-		this->get(att1, "att10");
-		this->get(videoProfile, "videoProfile");
-		this->get(att2, "att20");
-
-		cout << "VideoManager::read " << array[0] << endl;
-		cout << "VideoManager::read " << array[1] << endl;
+		this->get(this->array, 2, "arrayA");
+		this->get(this->att1, "att10");
+		for (int i=0; i<2; i++)
+			this->get((&this->videoProfile[i]), i, "videoProfile");
+		this->get(this->att2, "att20");
 	}
 	void write() {
 		this->set(this->att1, "att10");
-		this->set(this->videoProfile, "videoProfile");
+		for (int i=0; i<2; i++)
+			this->set(&(this->videoProfile[i]), i, "videoProfile");
 		this->set(this->att2, "att20");
 		this->set(this->array, 2, "arrayA");
 	}
-
 };
 
 

@@ -11,6 +11,8 @@
 #include <string>
 #include <exception>
 #include <iostream>
+#include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -36,6 +38,21 @@ private:
 		message.append(" ");
 		message.append(cause2);
 	}
+	void append(string moduleName, string functionName, string cause1, int cause2) {
+		message.clear();
+		message.append(moduleName);
+		message.append("::");
+		message.append(functionName);
+		message.append(" ");
+		message.append(cause1);
+		message.append(" ");
+		stringstream ss;
+		ss << cause2;
+		string s;
+		ss >> s;
+		message.append(s);
+	}
+
 
 public:
 	Message() {}
@@ -52,6 +69,10 @@ public:
 	void set(string moduleName, string functionName, string cause1, string cause2) {
 		append(moduleName, functionName, cause1, cause2);
 	}
+	void set(string moduleName, string functionName, string cause1, int cause2) {
+		append(moduleName, functionName, cause1, cause2);
+	}
+
 	void setCause(string& cause) {
 		this->message.append(cause);
 	}
@@ -88,7 +109,9 @@ public:
 	Exception(string moduleName, string functionName, string cause1, string cause2) {
 		gMessage.set(moduleName, functionName, cause1, cause2);
 	}
-
+	Exception(string moduleName, string functionName, string cause1, int cause2) {
+		gMessage.set(moduleName, functionName, cause1, cause2);
+	}
 	virtual ~Exception() throw() {
 	}
 
