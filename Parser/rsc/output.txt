@@ -1,10 +1,10 @@
-videoManager1{
+videoManager1 {
 	att10 1
-	videoProfile[]{
+	videoProfile[] {
 		{
 			att30 3
 			att40 4
-			a[]{
+			a[] {
 				 77
 				 66
 			}
@@ -13,7 +13,7 @@ videoManager1{
 		{
 			att30 4
 			att40 5
-			a[]{
+			a[] {
 				 88
 				 99
 			}
@@ -21,7 +21,7 @@ videoManager1{
 		}
 	}
 	att20 2
-	arrayA[]{
+	arrayA[] {
 		 33
 		 44
 	}

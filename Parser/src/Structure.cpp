@@ -60,12 +60,14 @@ void Structure::write(Lex& lex) throw() {
 		Element *pElement = elements.getElement(i);
 		lex.writeKey(pElement->getKey());
 		if (pElement->getType() == eStructure) {
+			lex.writeSpace();
 			lex.writeBegin();
 			pElement->write(lex);
 			lex.writeEnd();
 		} else if (pElement->getType() == eArray) {
 			lex.writeIndexBegin();
 			lex.writeIndexEnd();
+			lex.writeSpace();
 			lex.writeBegin();
 			pElement->write(lex);
 			lex.writeEnd();
