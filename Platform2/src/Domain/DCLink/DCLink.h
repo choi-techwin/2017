@@ -11,5 +11,5 @@ public:
 	virtual ~DCLink();
 	int initialize();
 
-	vector<Event> generateEventQueue();
+	void prepareEvents();
 };

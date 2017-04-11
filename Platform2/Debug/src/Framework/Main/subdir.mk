@@ -4,16 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/Framework/Main/LifecycleManager.cpp \
-../src/Framework/Main/Main.cpp 
+../src/Framework/Main/LifecycleManager.cpp 
 
 OBJS += \
-./src/Framework/Main/LifecycleManager.o \
-./src/Framework/Main/Main.o 
+./src/Framework/Main/LifecycleManager.o 
 
 CPP_DEPS += \
-./src/Framework/Main/LifecycleManager.d \
-./src/Framework/Main/Main.d 
+./src/Framework/Main/LifecycleManager.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

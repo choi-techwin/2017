@@ -10,10 +10,12 @@ RM := rm -rf
 -include sources.mk
 -include src/Technical/Device/subdir.mk
 -include src/Framework/Scheduler/subdir.mk
--include src/Framework/Main/subdir.mk
+-include src/Framework/LifecycleManager/subdir.mk
 -include src/Framework/Component/subdir.mk
 -include src/Domain/PWM/subdir.mk
 -include src/Domain/DCLink/subdir.mk
+-include src/Common/Utility/subdir.mk
+-include src/Application/S300/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -43,19 +45,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: Platform2.exe
+all: Platform00_Basic.exe
 
 # Tool invocations
-Platform2.exe: $(OBJS) $(USER_OBJS)
+Platform00_Basic.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cygwin C++ Linker'
-	g++  -o "Platform2.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++  -o "Platform00_Basic.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(OBJS)$(C_UPPER_DEPS)$(CXX_DEPS)$(CPP_DEPS)$(C_DEPS) Platform2.exe
+	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(OBJS)$(C_UPPER_DEPS)$(CXX_DEPS)$(CPP_DEPS)$(C_DEPS) Platform00_Basic.exe
 	-@echo ' '
 
 .PHONY: all clean dependents

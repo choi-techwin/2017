@@ -19,7 +19,7 @@ public:
 	vector<Event> getEventQueue() { return this->eventQueue; }
 
 	void enQueue(Event event);
-//	void enQueue(vector<Event> eventQueue);
+	void enQueue(vector<Event> eventQueue);
 	Event deQueue();
 
 };

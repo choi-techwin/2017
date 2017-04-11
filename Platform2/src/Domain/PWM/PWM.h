@@ -9,7 +9,7 @@ public:
 	virtual ~PWM();
 	int initialize();
 
-	vector<Event> generateEventQueue();
+	void prepareEvents();
 	void processEvent(Event event);
 
 };

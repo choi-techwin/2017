@@ -13,16 +13,16 @@ void EventQueue::enQueue(Event event) {
 	LeaveCriticalSection(&this->lock);
 }
 
-//void EventQueue::enQueue(vector<Event> eventQueue) {
-//	if (eventQueue.empty()) return;
-//
-//	EnterCriticalSection(&this->lock);
-//	for (vector<Event>::iterator itr = eventQueue.begin(); itr!=eventQueue.end(); itr++) {
-//		this->eventQueue.push_back(*itr);
-//	}
-//	eventQueue.clear();
-//	LeaveCriticalSection(&this->lock);
-//}
+void EventQueue::enQueue(vector<Event> eventQueue) {
+	if (eventQueue.empty()) return;
+
+	EnterCriticalSection(&this->lock);
+	for (vector<Event>::iterator itr = eventQueue.begin(); itr!=eventQueue.end(); itr++) {
+		this->eventQueue.push_back(*itr);
+	}
+	eventQueue.clear();
+	LeaveCriticalSection(&this->lock);
+}
 
 Event EventQueue::deQueue() {
 	Event event;

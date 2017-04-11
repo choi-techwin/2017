@@ -11,6 +11,7 @@ Scheduler::~Scheduler()
 
 int Scheduler::initialize()
 {
+	cout<<"Scheduler::initialize-" << this->getID() << endl;
 	return 0;
 }
 
@@ -48,7 +49,8 @@ void Scheduler::sendEvent() {
 void Scheduler::collectEvents() {
 	// get source events from eventSources
 	for (map<int, EventSource *>::iterator itr = this->eventSourceMap.begin(); itr!=this->eventSourceMap.end(); itr++) {
-		vector<Event> eventQueue = itr->second->generateEventQueue();
+		itr->second->prepareEvents();
+		vector<Event> eventQueue = itr->second->generateEvents();
 		for (vector<Event>::iterator itrEventQueue=eventQueue.begin(); itrEventQueue!=eventQueue.end(); itrEventQueue++) {
 			Event event = *itrEventQueue;
 			this->sourceEventQueue.enQueue(event);

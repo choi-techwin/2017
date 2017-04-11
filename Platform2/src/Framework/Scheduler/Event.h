@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Global/ValueObject.h"
+#include "../../Common/Global/ValueObject.h"
 
 class Event: public ValueObject
 {
@@ -14,10 +14,8 @@ private:
 public:
 	// constructors
 	Event();
+	Event(int type, ValueObject* pArg);
 	virtual ~Event();
-
-	// methods
-	virtual Event *deepCopy();
 
 	// getters & setters
 	int getType() { return this->type; }

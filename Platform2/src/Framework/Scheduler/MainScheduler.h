@@ -17,10 +17,11 @@ protected:
 public:
 	MainScheduler();
 	virtual ~MainScheduler();
-	virtual int initialize();
+	int initialize();
 
-	void addScheduler(Scheduler *pScheduer) { this->schedulerMap.insert(make_pair(pScheduer->getID(), pScheduer)); }
+	void addScheduler(Scheduler *pScheduer);
 	void configureSchedulers();
+	void initializeSchedulers();
 
-	virtual void run();
+	void run();
 };

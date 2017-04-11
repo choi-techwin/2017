@@ -1,7 +1,7 @@
 
 #include <vector>
 #include <stdio.h>
-//#include <thread>
+#include <thread>
 using namespace std;
 
 #include "MainScheduler.h"
@@ -17,17 +17,26 @@ MainScheduler::~MainScheduler() {
 
 int MainScheduler::initialize()
 {
+	cout<<"MainScheduler::initialize-" << this->getID() << endl;
 	return 0;
 }
 
+void  MainScheduler::addScheduler(Scheduler *pScheduer) {
+	this->schedulerMap.insert(make_pair(pScheduer->getID(), pScheduer));
+}
+
 void MainScheduler::configureSchedulers() {
-	cout << "MainScheduler::configureSchedulers() - this->schedulerMap.size() " << this->schedulerMap.size() << endl;
-	map<int, Scheduler *>::iterator itr = this->schedulerMap.begin();
-	for (unsigned i=0; i<this->schedulerMap.size(); i++ ) {
+
+	for (map<int, Scheduler *>::iterator itr = this->schedulerMap.begin(); itr!=this->schedulerMap.end(); itr++ ) {
 		Scheduler *pScheduler = itr->second;
-		cout << "MainScheduler::configureSchedulers() - ID " << pScheduler->getID() << endl;
 		pScheduler->configureComponents();
-		itr++;
+	}
+}
+
+void MainScheduler::initializeSchedulers() {
+	for (map<int, Scheduler *>::iterator itr = this->schedulerMap.begin(); itr!=this->schedulerMap.end(); itr++ ) {
+		Scheduler *pScheduler = itr->second;
+		pScheduler->initialize();
 	}
 }
 
@@ -51,11 +60,11 @@ void MainScheduler::collectEventsFromSchedulers() {
 }
 
 void MainScheduler::run() {
-//	vector<thread *> threadVector;
-//	for (map<int, Scheduler *>::iterator itrScheduler = this->schedulerMap.begin(); itrScheduler != this->schedulerMap.end(); itrScheduler++) {
-//		thread *t = new thread(&Scheduler::run, itrScheduler->second);
-//		threadVector.push_back(t);
-//	}
+	vector<thread *> threadVector;
+	for (map<int, Scheduler *>::iterator itrScheduler = this->schedulerMap.begin(); itrScheduler != this->schedulerMap.end(); itrScheduler++) {
+		thread *t = new thread(&Scheduler::run, itrScheduler->second);
+		threadVector.push_back(t);
+	}
 
 	while (this->getState() != eCOMPONENT_STOPPED) {
 		// MainScheduler Components
@@ -69,7 +78,7 @@ void MainScheduler::run() {
 //		scanf("%c", &c);
 	}
 
-//	for (vector<thread *>::iterator itrThread = threadVector.begin(); itrThread != threadVector.end(); itrThread++) {
-//		(*itrThread)->join();
-//	}
+	for (vector<thread *>::iterator itrThread = threadVector.begin(); itrThread != threadVector.end(); itrThread++) {
+		(*itrThread)->join();
+	}
 }
