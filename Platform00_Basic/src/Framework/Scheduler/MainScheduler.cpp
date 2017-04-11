@@ -40,7 +40,7 @@ void MainScheduler::initializeSchedulers() {
 	}
 }
 
-void MainScheduler::sendEventToScheduler() {
+void MainScheduler::distributeEventToScheduler() {
 	if (this->mainEventQueue.empty()) return;
 
 	Event event = this->mainEventQueue.front();
@@ -51,7 +51,8 @@ void MainScheduler::sendEventToScheduler() {
 
 void MainScheduler::collectEventsFromSchedulers() {
 	for (map<int, Scheduler *>::iterator itrSchedulerMap = this->schedulerMap.begin(); itrSchedulerMap!=this->schedulerMap.end(); itrSchedulerMap++) {
-		vector<Event> eventQueue = itrSchedulerMap->second->generateEventQueue();
+		itrSchedulerMap->second->prepareEvents();
+		vector<Event> eventQueue = itrSchedulerMap->second->generateEvents();
 		for (vector<Event>::iterator itrEventQueue=eventQueue.begin(); itrEventQueue!=eventQueue.end(); itrEventQueue++) {
 			Event event = *itrEventQueue;
 			this->mainEventQueue.push_back(event);
@@ -68,14 +69,15 @@ void MainScheduler::run() {
 
 	while (this->getState() != eCOMPONENT_STOPPED) {
 		// MainScheduler Components
-		this->sendEvent();
+		this->distributeEvent();
 		this->collectEvents();
 		// Schedulers
-		this->sendEventToScheduler();
+		this->distributeEventToScheduler();
 		this->collectEventsFromSchedulers();
 
-//		char c;
-//		scanf("%c", &c);
+		Sleep(500);
+		char c;
+		cin >> c;
 	}
 
 	for (vector<thread *>::iterator itrThread = threadVector.begin(); itrThread != threadVector.end(); itrThread++) {

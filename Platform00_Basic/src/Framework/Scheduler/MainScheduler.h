@@ -11,7 +11,7 @@ private:
 	vector<Event> mainEventQueue;
 	map<int, Scheduler *> schedulerMap;
 protected:
-	void sendEventToScheduler();
+	void distributeEventToScheduler();
 	void collectEventsFromSchedulers();
 
 public:

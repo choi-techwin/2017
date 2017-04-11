@@ -22,6 +22,7 @@ void LifecycleManager::initializeSchedulers() {
 }
 
 int LifecycleManager::initialize() {
+	this->registerSchedulers();
 	this->registerComponents();
 	this->associateComponents();
 	this->configureComponents();

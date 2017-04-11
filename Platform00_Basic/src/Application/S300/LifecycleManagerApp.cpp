@@ -26,24 +26,24 @@ LifecycleManagerApp::~LifecycleManagerApp() {
 
 void LifecycleManagerApp::registerSchedulers() {
 	this->addScheduler(&scheduler1);
-	this->addScheduler(&scheduler2);
+//	this->addScheduler(&scheduler2);
 }
 
 void LifecycleManagerApp::registerComponents() {
 	this->addComponent(&dcLink1, &scheduler1);
-	this->addComponent(&dcLink2, &scheduler2);
+//	this->addComponent(&dcLink2, &scheduler2);
 	this->addComponent(&pwm1);
 	cout << "LifecycleManager::registerComponents()" << endl;
 }
 
 void LifecycleManagerApp::associateComponents() {
 	pwm1.addEventSource(&dcLink1);
-	pwm1.addEventSource(&dcLink2);
+//	pwm1.addEventSource(&dcLink2);
 	cout << "LifecycleManager::associateComponents()" << endl;
 }
 
 void LifecycleManagerApp::initializeComponents() {
 	dcLink1.initialize();
-	dcLink2.initialize();
+//	dcLink2.initialize();
 	pwm1.initialize();
 }

@@ -37,7 +37,7 @@ void Scheduler::configureComponents()
 }
 
 // scheduling
-void Scheduler::sendEvent() {
+void Scheduler::distributeEvent() {
 	if (this->eventQueue.empty()) return;
 
 	Event event = this->eventQueue.deQueue();
@@ -61,10 +61,11 @@ void Scheduler::collectEvents() {
 void Scheduler::run(void)
 {
 	while (this->getState() != eCOMPONENT_STOPPED) {
-		this->sendEvent();
+		this->distributeEvent();
 		this->collectEvents();
+
 		Sleep(500);
-//		char c;
-//		scanf_s("%c", &c);
+		char c;
+		cin >> c;
 	}
 }

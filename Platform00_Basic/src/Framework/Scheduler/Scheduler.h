@@ -17,7 +17,7 @@ protected:
 	map<int, EventSource *> eventSourceMap;
 	map<int, EventTarget *> eventTargetMap;
 
-	void sendEvent();
+	void distributeEvent();
 	void collectEvents();
 
 public:
@@ -28,7 +28,7 @@ public:
 	void addComponent(Component *pComponent);
 	void configureComponents();
 
-	virtual vector<Event> generateEventQueue() {
+	virtual vector<Event> generateEvents() {
 		return this->sourceEventQueue.getEventQueue();
 	}
 	virtual void processEvent(Event event) {
