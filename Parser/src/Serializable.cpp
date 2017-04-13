@@ -146,26 +146,6 @@ void Serializable::get(string result[], int length, string key) throw() {
 		}
 	}
 }
-void Serializable::get(Serializable* pSerializable, int index, string key) throw() {
-	Array *pArray = (Array*)this->pStructure->getElement(key);
-	if (pArray==NULL) {
-		throw Exception(SERIALIZABLE_H_, "getArray-not found", key);
-	}
-	gMessage.show("Serializable", "getArrayStructure", pArray->getKey());
-
-	string indexKey = this->getString(index);
-	Element *pElement = pArray->getElement(indexKey);
-	if (pElement==NULL) {
-		throw Exception(SERIALIZABLE_H_, "getArrayElement-not found", key, indexKey);
-	}
-	if (pElement->getType() == eStructure) {
-		gMessage.show("  Structure::Array", "index = ", indexKey);
-		// associate the serializable with a found structure
-		pSerializable->setStructure((Structure*)pElement);
-		// fill each field
-		pSerializable->read();
-	}
-}
 
 Structure* Serializable::prepareStructure(string key) {
 	Structure* pElement = (Structure*)this->pStructure->getElement(key);
@@ -268,18 +248,5 @@ void Serializable::set(string value[], int length, string key) throw() {
 		pElement->setValue(value[i]);
 		cout << "  " << "   setArrayElement" << "(" << elementKey <<  ")" << value[i]<<endl;
 	}
-}
-void Serializable::set(Serializable* pSerializable, int index, string key) throw() {
-	Array* pArray = this->prepareArray(key);
-	string elementKey = this->getString(index);
-	gMessage.show("Serializable", "setStructureArray", key, elementKey);
-	Structure* pElement = (Structure *)pArray->getElement(elementKey);
-	if (pElement == NULL) {
-		pElement = new Structure();
-		pElement->setKey(elementKey);
-		pArray->addElement(pElement);
-		pSerializable->setStructure(pElement);
-	}
-	pSerializable->write();
 }
 

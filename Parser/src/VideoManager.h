@@ -62,14 +62,12 @@ public:
 	void read() {
 		this->get(this->array, 2, "arrayA");
 		this->get(this->att1, "att10");
-		for (int i=0; i<2; i++)
-			this->get((&this->videoProfile[i]), i, "videoProfile");
+		this->get(this->videoProfile, 2, "videoProfile");
 		this->get(this->att2, "att20");
 	}
 	void write() {
 		this->set(this->att1, "att10");
-		for (int i=0; i<2; i++)
-			this->set(&(this->videoProfile[i]), i, "videoProfile");
+		this->set(this->videoProfile, 2, "videoProfile");
 		this->set(this->att2, "att20");
 		this->set(this->array, 2, "arrayA");
 	}
