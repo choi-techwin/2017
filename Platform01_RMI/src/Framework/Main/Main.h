@@ -2,12 +2,12 @@
 
 #include "LifecycleManager.h"
 
-class Main {
+class MainApp {
 private:
 	LifecycleManager lifecycleManager;
 public:
-	Main();
-	virtual ~Main();
+	MainApp();
+	virtual ~MainApp();
 	virtual int initialize();
 	virtual void run();
 };

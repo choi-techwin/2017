@@ -1,25 +1,25 @@
 
 #include "Main.h"
 
-Main::Main() {
+MainApp::MainApp() {
 
 }
 
-Main::~Main() {
+MainApp::~MainApp() {
 
 }
 
-int Main::initialize() {
+int MainApp::initialize() {
 	this->lifecycleManager.initialize();
 	return 0;
 }
 
-void Main::run() {
+void MainApp::run() {
 	this->lifecycleManager.run();
 }
 
 int main() {
-	Main main;
+	MainApp main;
 	main.initialize();
 	main.run();
 }
