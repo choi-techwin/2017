@@ -46,23 +46,26 @@ void Scheduler::distributeEvent() {
 	pEventTarget->processEvent(event);
 }
 
-void Scheduler::collectEvents() {
+void Scheduler::prepareEvents() {
 	// get source events from eventSources
 	for (map<int, EventSource *>::iterator itr = this->eventSourceMap.begin(); itr!=this->eventSourceMap.end(); itr++) {
-		itr->second->prepareEvents();
 		vector<Event> eventQueue = itr->second->generateEvents();
 		for (vector<Event>::iterator itrEventQueue=eventQueue.begin(); itrEventQueue!=eventQueue.end(); itrEventQueue++) {
 			Event event = *itrEventQueue;
-			this->sourceEventQueue.enQueue(event);
+			this->addEvent(event);
 		}
 	}
+}
+
+vector<Event> Scheduler::generateEvents() {
+	return this->getSourceEvents();
 }
 
 void Scheduler::run(void)
 {
 	while (this->getState() != eCOMPONENT_STOPPED) {
 		this->distributeEvent();
-		this->collectEvents();
+		this->prepareEvents();
 
 		Sleep(500);
 		char c;

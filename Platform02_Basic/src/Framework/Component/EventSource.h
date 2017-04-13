@@ -10,41 +10,47 @@ using namespace std;
 class EventSource : public Component
 {
 private:
-	vector<EventTargetID> eventTargetIDVector;
-	vector<Event> eventVector;
+	vector<EventTargetID> eventTargetIDs;
+	vector<Event> sourceEvents;
+protected:
+	virtual void prepareEvents() = 0;
+
+	vector<Event> getSourceEvents() { return this->sourceEvents; }
+
+	void addEventTargetID(int componentID, int schedulerID) {
+		EventTargetID eventTargetID(componentID, schedulerID);
+		this->eventTargetIDs.push_back(eventTargetID);
+	}
+	void addEvent(int type, ValueObject* pArg) {
+		Event event;
+		event.setType(type);
+		event.setPArg(pArg);
+		this->sourceEvents.push_back(event);
+	}
+	void addEvent(Event event) {
+		this->sourceEvents.push_back(event);
+	}
+
 public:
 	EventSource() {}
 	virtual ~EventSource() {}
 
 	bool isEventSource() { return true; }
 
-	void addEventTargetID(int componentID, int schedulerID) {
-		EventTargetID eventTargetID(componentID, schedulerID);
-		this->eventTargetIDVector.push_back(eventTargetID);
-	}
-	vector<EventTargetID> getEventTargetIDVector() { return this->eventTargetIDVector; }
-
-	void addEvent(int type, ValueObject* pArg) {
-		Event event;
-		event.setType(type);
-		event.setPArg(pArg);
-		this->eventVector.push_back(event);
-	}
 	vector<Event> generateEvents() {
-		vector<Event> targetEventVector;
-		for (vector<Event>::iterator eventItr=this->eventVector.begin(); eventItr!=this->eventVector.end(); eventItr++) {
-			for (vector<EventTargetID>::iterator idItr=this->eventTargetIDVector.begin(); idItr!=this->eventTargetIDVector.end(); idItr++) {
+		this->prepareEvents();
+		vector<Event> targetEvents;
+		for (vector<Event>::iterator eventItr=this->sourceEvents.begin(); eventItr!=this->sourceEvents.end(); eventItr++) {
+			for (vector<EventTargetID>::iterator idItr=this->eventTargetIDs.begin(); idItr!=this->eventTargetIDs.end(); idItr++) {
 				(*eventItr).setSourceID(this->getID());
 				(*eventItr).setTargetID(idItr->getComponentID());
 				(*eventItr).setTargetSchedulerID(idItr->getSchedulerID());
-				targetEventVector.push_back(*eventItr);
+				targetEvents.push_back(*eventItr);
 			}
 		}
-		this->eventVector.clear();
-		return targetEventVector;
+		this->sourceEvents.clear();
+		return targetEvents;
 	}
-
-	virtual void prepareEvents() {};
 };
 
 
