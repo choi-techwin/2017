@@ -6,7 +6,7 @@
  */
 #include "LifecycleManager.h"
 
-LifecycleManager::LifecycleManager() {
+LifecycleManager::LifecycleManager(): EventTarget(typeid(*this)) {
 }
 
 LifecycleManager::~LifecycleManager() {
@@ -14,11 +14,16 @@ LifecycleManager::~LifecycleManager() {
 
 void LifecycleManager::configureComponents() {
 	this->mainScheduler.configureSchedulers();
-	cout << "LifecycleManager::configureComponents()" << endl;
 }
 
 void LifecycleManager::initializeSchedulers() {
 	this->mainScheduler.initializeSchedulers();
+}
+
+void LifecycleManager::initializeComponents() {
+	for (ComponentMap::iterator itr=this->components.begin(); itr!=this->components.end(); itr++) {
+		itr->second->initialize();
+	}
 }
 
 int LifecycleManager::initialize() {

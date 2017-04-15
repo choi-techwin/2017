@@ -1,17 +1,14 @@
 #include "Scheduler.h"
 
-Scheduler::Scheduler()
-{
-	cout<<"Scheduler::Scheduler-" << this->getID() << endl;
+Scheduler::Scheduler(): EventTarget(typeid(*this))  {
 }
 
-Scheduler::~Scheduler()
-{
+Scheduler::~Scheduler() {
 }
 
 int Scheduler::initialize()
 {
-	cout<<"Scheduler::initialize-" << this->getID() << endl;
+	this->addComponent(this);
 	return 0;
 }
 
@@ -28,47 +25,39 @@ void Scheduler::addComponent(Component *pComponent)
 void Scheduler::configureComponents()
 {
 	// associate EventTarget to EventSource
-	for (map<int, EventTarget *>::iterator itrTarget = this->eventTargetMap.begin(); itrTarget!=this->eventTargetMap.end(); itrTarget++) {
-		vector<EventSource *> eventSourceVector = itrTarget->second->getEventSourceVector();
-		for (vector<EventSource *>::iterator itrSource = eventSourceVector.begin(); itrSource!=eventSourceVector.end(); itrSource++) {
+	for (EventTargetMap::iterator itrTarget = this->eventTargetMap.begin(); itrTarget!=this->eventTargetMap.end(); itrTarget++) {
+		EventSourceVector* pEventSourceVector = itrTarget->second->getEventSourceVector();
+		for (EventSourceVector::iterator itrSource = pEventSourceVector->begin(); itrSource!=pEventSourceVector->end(); itrSource++) {
 			(*itrSource)->addEventTargetID(itrTarget->second->getID(), this->getID());
 		}
 	}
 }
 
-// scheduling
-void Scheduler::distributeEvent() {
-	if (this->eventQueue.empty()) return;
-
-	Event event = this->eventQueue.deQueue();
-	EventTarget *pEventTarget = this->eventTargetMap.find(event.getTargetID())->second;
-	if (pEventTarget == 0) return;
-	pEventTarget->processEvent(event);
-}
-
-void Scheduler::prepareEvents() {
+void Scheduler::collectEvents() {
 	// get source events from eventSources
-	for (map<int, EventSource *>::iterator itr = this->eventSourceMap.begin(); itr!=this->eventSourceMap.end(); itr++) {
-		vector<Event> eventQueue = itr->second->generateEvents();
-		for (vector<Event>::iterator itrEventQueue=eventQueue.begin(); itrEventQueue!=eventQueue.end(); itrEventQueue++) {
-			Event event = *itrEventQueue;
-			this->addEvent(event);
+	for (EventSourceMap::iterator itrEventSource = this->eventSourceMap.begin(); itrEventSource!=this->eventSourceMap.end(); itrEventSource++) {
+		EventQueue* pEventQueue = itrEventSource->second->getEvents();
+		for (EventQueue::iterator itrEvent=pEventQueue->begin(); itrEvent!=pEventQueue->end(); itrEvent++) {
+			this->sourceEventQueue.enQueue(*itrEvent);
 		}
+		pEventQueue->clear();
 	}
 }
 
-vector<Event> Scheduler::generateEvents() {
-	return this->getSourceEvents();
+// scheduling
+void Scheduler::distributeEvent() {
+	if (this->targetEventQueue.empty()) return;
+
+	Event event = this->targetEventQueue.deQueue();
+	EventTarget *pEventTarget = this->eventTargetMap.find(event.getTargetID())->second;
+	if (pEventTarget == 0) return;
+	pEventTarget->putEvent(event);
 }
 
 void Scheduler::run(void)
 {
 	while (this->getState() != eCOMPONENT_STOPPED) {
 		this->distributeEvent();
-		this->prepareEvents();
-
-		Sleep(500);
-		char c;
-		cin >> c;
+		this->collectEvents();
 	}
 }

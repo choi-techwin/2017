@@ -1,18 +1,27 @@
 #pragma once
 
-#include <vector>
-#include <map>
+#include "../../Common/Utility/Map.h"
+#include "../../Common/Utility/Queue.h"
 using namespace std;
 
 #include "Scheduler.h"
 
+typedef Map<int, Scheduler*> SchedulerMap;
+typedef Queue<Event> EventQueue;
+
 class MainScheduler: public Scheduler {
 private:
-	vector<Event> mainEventQueue;
-	map<int, Scheduler *> schedulerMap;
+	EventQueue mainEventQueue;
+	SchedulerMap schedulerMap;
+
 protected:
-	void distributeEventToScheduler();
-	void collectEventsFromSchedulers();
+	// As a component
+	virtual void generateEvents() {}
+	virtual void processEvent(Event event) {}
+
+	// As a scheduler
+	virtual void collectEventsFromSchedulers();
+	virtual void distributeEventToScheduler();
 
 public:
 	MainScheduler();

@@ -14,7 +14,6 @@ RM := rm -rf
 -include src/Framework/Component/subdir.mk
 -include src/Domain/PWM/subdir.mk
 -include src/Domain/DCLink/subdir.mk
--include src/Common/Utility/subdir.mk
 -include src/Application/S300/subdir.mk
 -include subdir.mk
 -include objects.mk

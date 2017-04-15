@@ -6,17 +6,18 @@
  */
 
 #include "../../Framework/LifecycleManager/LifecycleManagerApp.h"
+#include "../../Framework/Scheduler/Scheduler.h"
 #include "../../Domain/DCLink/DCLink.h"
 #include "../../Domain/PWM/PWM.h"
 
 static Scheduler scheduler1;
 static Scheduler scheduler2;
 
+static DCLink dcLink0;
 static DCLink dcLink1;
-static DCLink dcLink2;
 
+static PWM pwm0;
 static PWM pwm1;
-static PWM pwm2;
 
 LifecycleManagerApp::LifecycleManagerApp() {
 }
@@ -26,24 +27,17 @@ LifecycleManagerApp::~LifecycleManagerApp() {
 
 void LifecycleManagerApp::registerSchedulers() {
 	this->addScheduler(&scheduler1);
-//	this->addScheduler(&scheduler2);
+	this->addScheduler(&scheduler2);
 }
 
 void LifecycleManagerApp::registerComponents() {
-	this->addComponent(&dcLink1, &scheduler1);
-//	this->addComponent(&dcLink2, &scheduler2);
+	this->addComponent(&dcLink0, &scheduler1);
+	this->addComponent(&dcLink1, &scheduler2);
+	this->addComponent(&pwm0);
 	this->addComponent(&pwm1);
-	cout << "LifecycleManager::registerComponents()" << endl;
 }
 
 void LifecycleManagerApp::associateComponents() {
+	pwm0.addEventSource(&dcLink0);
 	pwm1.addEventSource(&dcLink1);
-//	pwm1.addEventSource(&dcLink2);
-	cout << "LifecycleManager::associateComponents()" << endl;
-}
-
-void LifecycleManagerApp::initializeComponents() {
-	dcLink1.initialize();
-//	dcLink2.initialize();
-	pwm1.initialize();
 }

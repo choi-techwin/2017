@@ -5,10 +5,10 @@
  *      Author: choi.sungwoon
  */
 
-#ifndef APPLICATION_LIFECYCLEMANAGERS300_H_
-#define APPLICATION_LIFECYCLEMANAGERS300_H_
+#ifndef APPLICATION_LIFECYCLEMANAGERAPP_H_
+#define APPLICATION_LIFECYCLEMANAGERAPP_H_
 
-#include "../../Framework/LifecycleManager/LifecycleManager.h"
+#include "LifecycleManager.h"
 
 class LifecycleManagerApp: public LifecycleManager {
 public:
@@ -18,7 +18,6 @@ public:
 	void registerSchedulers();
 	void registerComponents();
 	void associateComponents();
-	void initializeComponents();
 };
 
-#endif /* APPLICATION_LIFECYCLEMANAGERS300_H_ */
+#endif /* APPLICATION_LIFECYCLEMANAGERAPP_H_ */

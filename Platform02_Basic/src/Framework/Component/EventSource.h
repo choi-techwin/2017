@@ -3,53 +3,53 @@
 #include <vector>
 using namespace std;
 
+#include "../../Common/Utility/Queue.h"
 #include "Component.h"
 #include "EventTargetID.h"
 #include "../../Framework/Scheduler/Event.h"
 
+typedef vector<EventTargetID> EventTargetIDVector;
+typedef Queue<Event> EventQueue;
+
 class EventSource : public Component
 {
 private:
-	vector<EventTargetID> eventTargetIDs;
-	vector<Event> sourceEvents;
-protected:
-	virtual void prepareEvents() = 0;
+	EventTargetIDVector eventTargetIDs;
+	EventQueue sourceEventQueue;
 
-	vector<Event> getSourceEvents() { return this->sourceEvents; }
+protected:
+	virtual void generateEvents() = 0;
+
+	void addEvent(Event event) {
+		for (EventTargetIDVector::iterator itr=this->eventTargetIDs.begin(); itr!=this->eventTargetIDs.end(); itr++) {
+			event.setSourceID(this->getID());
+			event.setTargetID(itr->getComponentID());
+			event.setTargetSchedulerID(itr->getSchedulerID());
+			this->sourceEventQueue.enQueue(event);
+		}
+	}
+	void addEvent(int type, ValueObject* pArg) {
+		Event currentEvent;
+		currentEvent.setType(type);
+		currentEvent.setPArg(pArg);
+		this->addEvent(currentEvent);
+	}
+	EventQueue* getSourceEventQueue() { return &(this->sourceEventQueue); }
+
+public:
+	EventSource(const type_info& typeInfo): Component(typeInfo) {}
+	virtual ~EventSource() {}
+
+	bool isEventSource() { return true; }
+	void clearEvents() { this->sourceEventQueue.clear(); }
 
 	void addEventTargetID(int componentID, int schedulerID) {
 		EventTargetID eventTargetID(componentID, schedulerID);
 		this->eventTargetIDs.push_back(eventTargetID);
 	}
-	void addEvent(int type, ValueObject* pArg) {
-		Event event;
-		event.setType(type);
-		event.setPArg(pArg);
-		this->sourceEvents.push_back(event);
-	}
-	void addEvent(Event event) {
-		this->sourceEvents.push_back(event);
-	}
-
-public:
-	EventSource() {}
-	virtual ~EventSource() {}
-
-	bool isEventSource() { return true; }
-
-	vector<Event> generateEvents() {
-		this->prepareEvents();
-		vector<Event> targetEvents;
-		for (vector<Event>::iterator eventItr=this->sourceEvents.begin(); eventItr!=this->sourceEvents.end(); eventItr++) {
-			for (vector<EventTargetID>::iterator idItr=this->eventTargetIDs.begin(); idItr!=this->eventTargetIDs.end(); idItr++) {
-				(*eventItr).setSourceID(this->getID());
-				(*eventItr).setTargetID(idItr->getComponentID());
-				(*eventItr).setTargetSchedulerID(idItr->getSchedulerID());
-				targetEvents.push_back(*eventItr);
-			}
-		}
-		this->sourceEvents.clear();
-		return targetEvents;
+	EventQueue* getEvents() {
+		this->generateEvents();
+		return &(this->sourceEventQueue);
 	}
 };
 

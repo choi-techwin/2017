@@ -1,14 +1,10 @@
 
-#include <vector>
-#include <stdio.h>
+#include "MainScheduler.h"
+
 #include <thread>
 using namespace std;
 
-#include "MainScheduler.h"
-
-MainScheduler::MainScheduler()
-{
-	cout<<"MainScheduler::MainScheduler-" << this->getID() << endl;
+MainScheduler::MainScheduler() {
 	this->addScheduler(this);
 }
 
@@ -17,7 +13,6 @@ MainScheduler::~MainScheduler() {
 
 int MainScheduler::initialize()
 {
-	cout<<"MainScheduler::initialize-" << this->getID() << endl;
 	return 0;
 }
 
@@ -26,43 +21,41 @@ void  MainScheduler::addScheduler(Scheduler *pScheduer) {
 }
 
 void MainScheduler::configureSchedulers() {
-
-	for (map<int, Scheduler *>::iterator itr = this->schedulerMap.begin(); itr!=this->schedulerMap.end(); itr++ ) {
+	for (SchedulerMap::iterator itr = this->schedulerMap.begin(); itr!=this->schedulerMap.end(); itr++ ) {
 		Scheduler *pScheduler = itr->second;
 		pScheduler->configureComponents();
 	}
 }
 
 void MainScheduler::initializeSchedulers() {
-	for (map<int, Scheduler *>::iterator itr = this->schedulerMap.begin(); itr!=this->schedulerMap.end(); itr++ ) {
+	for (SchedulerMap::iterator itr = this->schedulerMap.begin(); itr!=this->schedulerMap.end(); itr++ ) {
 		Scheduler *pScheduler = itr->second;
 		pScheduler->initialize();
+	}
+}
+
+void MainScheduler::collectEventsFromSchedulers() {
+	for (SchedulerMap::iterator itrScheduler = this->schedulerMap.begin(); itrScheduler!=this->schedulerMap.end(); itrScheduler++) {
+		EventQueue* pEventQueue = itrScheduler->second->getEvents();
+		for (EventQueue::Iterator itrEvent = pEventQueue->begin(); itrEvent!= pEventQueue->end(); itrEvent++) {
+			this->mainEventQueue.enQueue(*itrEvent);
+		}
+		pEventQueue->clear();
 	}
 }
 
 void MainScheduler::distributeEventToScheduler() {
 	if (this->mainEventQueue.empty()) return;
 
-	Event event = this->mainEventQueue.front();
+	Event event = this->mainEventQueue.deQueue();
 	Scheduler *pScheduler = (this->schedulerMap.find(event.getTargetSchedulerID()))->second;
-	pScheduler->processEvent(event);
-	this->mainEventQueue.erase(this->mainEventQueue.begin());
-}
-
-void MainScheduler::collectEventsFromSchedulers() {
-	for (map<int, Scheduler *>::iterator itrSchedulerMap = this->schedulerMap.begin(); itrSchedulerMap!=this->schedulerMap.end(); itrSchedulerMap++) {
-		itrSchedulerMap->second->prepareEvents();
-		vector<Event> eventQueue = itrSchedulerMap->second->generateEvents();
-		for (vector<Event>::iterator itrEventQueue=eventQueue.begin(); itrEventQueue!=eventQueue.end(); itrEventQueue++) {
-			Event event = *itrEventQueue;
-			this->mainEventQueue.push_back(event);
-		}
-	}
+	pScheduler->putEvent(event);
 }
 
 void MainScheduler::run() {
 	vector<thread *> threadVector;
-	for (map<int, Scheduler *>::iterator itrScheduler = this->schedulerMap.begin(); itrScheduler != this->schedulerMap.end(); itrScheduler++) {
+	for (SchedulerMap::iterator itrScheduler = this->schedulerMap.begin(); itrScheduler != this->schedulerMap.end(); itrScheduler++) {
+		if (itrScheduler->second == this) continue;
 		thread *t = new thread(&Scheduler::run, itrScheduler->second);
 		threadVector.push_back(t);
 	}
@@ -74,10 +67,6 @@ void MainScheduler::run() {
 		// Schedulers
 		this->distributeEventToScheduler();
 		this->collectEventsFromSchedulers();
-
-		Sleep(500);
-		char c;
-		cin >> c;
 	}
 
 	for (vector<thread *>::iterator itrThread = threadVector.begin(); itrThread != threadVector.end(); itrThread++) {

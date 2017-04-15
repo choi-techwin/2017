@@ -2,21 +2,21 @@
 #include "DCLink.h"
 
 
-DCLink::DCLink(){
-	cout<<"DCLink::DCLink-" << this->getID() << endl;
+DCLink::DCLink(): EventSource(typeid(*this)) {
 }
 
 DCLink::~DCLink(){
 }
 
 int DCLink::initialize() {
-	cout<<"DCLink::initialize-" << this->getID() << endl;
 	return 0;
 }
 
-void DCLink::prepareEvents()
+void DCLink::generateEvents()
 {
-		this->addEvent(eDCLINK_1, NULL);
-		cout << "DCLink::prepareEvents: EventType " << eDCLINK_1 << endl;
-		cout << "                       SourceID " << this->getID() << endl;
+	Sleep(500);
+	this->addEvent(eDCLINK_1, NULL);
+	EventQueue* pSourceEventQueue = this->getSourceEventQueue();
+	for (EventQueue::Iterator itr=pSourceEventQueue->begin();  itr!=pSourceEventQueue->end(); itr++)
+		cout << this->getTypeName() << "(" << this->getID() << ")::generateEvents(target=" << itr->getTargetID() << ", type=" << eDCLINK_1 << ")" << endl;
 }

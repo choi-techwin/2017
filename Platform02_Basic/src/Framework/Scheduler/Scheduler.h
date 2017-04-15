@@ -1,36 +1,50 @@
 #pragma once
 
-#include <map>
-using namespace std;
-
-#include "EventQueue.h"
+#include "../../Common/Utility/Map.h"
+#include "../../Common/Utility/Queue.h"
 
 #include "../Component/Component.h"
 #include "../Component/EventSource.h"
 #include "../Component/EventTarget.h"
 
+#include "Event.h"
+using namespace std;
+
+typedef SafeQueue<Event> SafeEventQueue;
+typedef Map<int, EventSource *> EventSourceMap;
+typedef Map<int, EventTarget *> EventTargetMap;
+
 class Scheduler: public EventTarget {
+private:
+	SafeEventQueue sourceEventQueue;
+	SafeEventQueue targetEventQueue;
+
+	EventSourceMap eventSourceMap;
+	EventTargetMap eventTargetMap;
+
 protected:
-	EventQueue eventQueue;
+	// As a component
+	virtual void generateEvents() {}
+	virtual void processEvent(Event event) {}
 
-	map<int, EventSource *> eventSourceMap;
-	map<int, EventTarget *> eventTargetMap;
+	// As a scheduler
+	virtual void collectEvents();
+	virtual void distributeEvent();
 
-	void distributeEvent();
-	virtual void prepareEvents();
 public:
 	Scheduler();
 	virtual ~Scheduler();
 	virtual int initialize();
 
+	void clearSourceEvents() { this->sourceEventQueue.clear(); }
+	void clearTargetEvents() { this->targetEventQueue.clear(); }
+
+	EventQueue* getEvents() { return &(this->sourceEventQueue); }
+	void putEvent(Event event) { this->targetEventQueue.enQueue(event); }
+
+
 	void addComponent(Component *pComponent);
 	void configureComponents();
-
-	virtual vector<Event> generateEvents();
-
-	virtual void processEvent(Event event) {
-		this->eventQueue.enQueue(event);
-	}
 
 	void run();
 };

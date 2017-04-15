@@ -24,7 +24,6 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/Application/S300 \
-src/Common/Utility \
 src/Domain/DCLink \
 src/Domain/PWM \
 src/Framework/Component \
