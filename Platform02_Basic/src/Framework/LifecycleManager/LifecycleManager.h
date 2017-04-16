@@ -26,6 +26,7 @@ protected:
 
 	void addScheduler(Scheduler* pScheduler) {
 		this->mainScheduler.addScheduler(pScheduler);
+		this->components.insert(make_pair(pScheduler->getID(), pScheduler));
 	}
 	void addComponent(Component* pComponent) {
 		this->mainScheduler.addComponent(pComponent);

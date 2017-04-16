@@ -11,6 +11,8 @@ using namespace std;
 typedef vector<EventTargetID> EventTargetIDVector;
 typedef Queue<Event> EventQueue;
 
+enum EEvents { eEventSourceGenerated = __COUNTER__};
+
 class EventSource : public Component
 {
 private:
@@ -39,6 +41,10 @@ protected:
 public:
 	EventSource(const type_info& typeInfo): Component(typeInfo) {}
 	virtual ~EventSource() {}
+	virtual int initialize() {
+		this->addEvent(eEventSourceGenerated, NULL);
+		return 0;
+	};
 
 	bool isEventSource() { return true; }
 	void clearEvents() { this->sourceEventQueue.clear(); }
