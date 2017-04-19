@@ -4,7 +4,7 @@
 #include "../Scheduler/MainScheduler.h"
 #include "../Component/Component.h"
 
-class LifecycleManager {
+class LifecycleManagerFramework {
 private:
 	MainScheduler mainScheduler;
 protected:
@@ -26,8 +26,8 @@ protected:
 	virtual void initializeComponents() = 0;
 
 public:
-	LifecycleManager();
-	virtual ~LifecycleManager();
+	LifecycleManagerFramework();
+	virtual ~LifecycleManagerFramework();
 
 	virtual int initialize();
 	virtual int run();

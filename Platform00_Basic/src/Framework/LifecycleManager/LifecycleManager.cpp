@@ -6,22 +6,22 @@
  */
 #include "LifecycleManager.h"
 
-LifecycleManager::LifecycleManager() {
+LifecycleManagerFramework::LifecycleManagerFramework() {
 }
 
-LifecycleManager::~LifecycleManager() {
+LifecycleManagerFramework::~LifecycleManagerFramework() {
 }
 
-void LifecycleManager::configureComponents() {
+void LifecycleManagerFramework::configureComponents() {
 	this->mainScheduler.configureSchedulers();
 	cout << "LifecycleManager::configureComponents()" << endl;
 }
 
-void LifecycleManager::initializeSchedulers() {
+void LifecycleManagerFramework::initializeSchedulers() {
 	this->mainScheduler.initializeSchedulers();
 }
 
-int LifecycleManager::initialize() {
+int LifecycleManagerFramework::initialize() {
 	this->registerSchedulers();
 	this->registerComponents();
 	this->associateComponents();
@@ -31,7 +31,7 @@ int LifecycleManager::initialize() {
 	return 0;
 }
 
-int LifecycleManager::run() {
+int LifecycleManagerFramework::run() {
 	mainScheduler.run();
 	return 0;
 }

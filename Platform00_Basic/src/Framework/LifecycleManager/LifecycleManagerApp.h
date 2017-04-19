@@ -10,7 +10,7 @@
 
 #include "../../Framework/LifecycleManager/LifecycleManager.h"
 
-class LifecycleManagerApp: public LifecycleManager {
+class LifecycleManagerApp: public LifecycleManagerFramework {
 public:
 	LifecycleManagerApp();
 	virtual ~LifecycleManagerApp();
