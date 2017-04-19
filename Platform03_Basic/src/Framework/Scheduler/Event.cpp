@@ -3,6 +3,7 @@
 Event::Event() {
 	this->type = 0;
 	this->sourceID = 0;
+	this->sourceSchedulerID = 0;
 	this->targetID = 0;
 	this->targetSchedulerID = 0;
 	this->pArg = 0;
@@ -11,6 +12,7 @@ Event::Event() {
 Event::Event(int type, ValueObject* pArg) {
 	this->type = type;
 	this->sourceID = 0;
+	this->sourceSchedulerID = 0;
 	this->targetID = 0;
 	this->targetSchedulerID = 0;
 	this->pArg = pArg;

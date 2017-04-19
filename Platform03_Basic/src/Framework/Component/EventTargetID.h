@@ -13,6 +13,9 @@ private:
 	int componentID;
 	int schedulerID;
 public:
+	EventTargetID() {
+
+	}
 	EventTargetID(int componentID, int schedulerID) {
 		this->componentID = componentID;
 		this->schedulerID = schedulerID;

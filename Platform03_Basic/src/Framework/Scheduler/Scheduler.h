@@ -1,14 +1,12 @@
 #pragma once
 
-#include "../../Common/Utility/Map.h"
-#include "../../Common/Utility/Queue.h"
+#include "../../Common/Utility/Collection.h"
 
 #include "../Component/Component.h"
 #include "../Component/EventSource.h"
 #include "../Component/EventTarget.h"
 
 #include "Event.h"
-using namespace std;
 
 typedef SafeQueue<Event> SafeEventQueue;
 typedef Map<int, EventSource *> EventSourceMap;

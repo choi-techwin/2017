@@ -8,12 +8,15 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include src/Technical/Timer/subdir.mk
+-include src/Technical/LifecycleManagerTech/subdir.mk
 -include src/Technical/Device/subdir.mk
 -include src/Framework/Scheduler/subdir.mk
--include src/Framework/LifecycleManager/subdir.mk
+-include src/Framework/LifecycleManagerFramework/subdir.mk
 -include src/Framework/Component/subdir.mk
--include src/Domain/PWM/subdir.mk
--include src/Domain/DCLink/subdir.mk
+-include src/Domain/LifecycleManagerDomain/subdir.mk
+-include src/Domain/EventTarget/subdir.mk
+-include src/Domain/EventSource/subdir.mk
 -include src/Application/S300/subdir.mk
 -include subdir.mk
 -include objects.mk

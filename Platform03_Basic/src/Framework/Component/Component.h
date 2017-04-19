@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <typeinfo>
-using namespace std;
 
 #include "../../Common/Utility/Exception.h"
 
@@ -12,6 +11,8 @@ private:
 	const type_info& typeInfo;
 	string typeName;
 	int ID;
+	int schedulerID;
+
 	EComponentState state;
 protected:
 
@@ -22,6 +23,9 @@ public:
 
 	string getTypeName() { return this->typeName; }
 	int getID() { return this->ID; }
+
+	int getSchedulerID() { return this->ID; }
+	void setSchedulerID(int schedulerID) { this->schedulerID = schedulerID; }
 
 	EComponentState getState() { return this->state; }
 	void setState(EComponentState state) { this->state = state; }

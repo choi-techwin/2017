@@ -1,22 +1,21 @@
 
 #include "Main.h"
-#include "LifecycleManagerApp.h"
-
-static LifecycleManagerApp lifecycleManagerApp;
 
 Main::Main() {
+
 }
 
 Main::~Main() {
+
 }
 
 int Main::initialize() {
-	lifecycleManagerApp.initialize();
+	this->lifecycleManagerApp.initializeFramework();
 	return 0;
 }
 
 void Main::run() {
-	lifecycleManagerApp.run();
+	this->lifecycleManagerApp.run();
 }
 
 int main() {

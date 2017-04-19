@@ -4,13 +4,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/Application/S300/LifecycleManagerApp.cpp 
+../src/Application/S300/LifecycleManagerApp.cpp \
+../src/Application/S300/Main.cpp 
 
 OBJS += \
-./src/Application/S300/LifecycleManagerApp.o 
+./src/Application/S300/LifecycleManagerApp.o \
+./src/Application/S300/Main.o 
 
 CPP_DEPS += \
-./src/Application/S300/LifecycleManagerApp.d 
+./src/Application/S300/LifecycleManagerApp.d \
+./src/Application/S300/Main.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

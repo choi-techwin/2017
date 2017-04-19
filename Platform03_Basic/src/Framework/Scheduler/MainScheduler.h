@@ -1,9 +1,6 @@
 #pragma once
 
-#include "../../Common/Utility/Map.h"
-#include "../../Common/Utility/Queue.h"
-using namespace std;
-
+#include "../../Common/Utility/Collection.h"
 #include "Scheduler.h"
 
 typedef Map<int, Scheduler*> SchedulerMap;
@@ -28,9 +25,9 @@ public:
 	virtual ~MainScheduler();
 	int initialize();
 
+	SchedulerMap getSchedulerMap() { return this->schedulerMap; }
 	void addScheduler(Scheduler *pScheduer);
 	void configureSchedulers();
-	void initializeSchedulers();
 
 	void run();
 };

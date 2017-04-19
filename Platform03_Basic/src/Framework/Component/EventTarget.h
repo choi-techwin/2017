@@ -1,11 +1,8 @@
 #pragma once
 
-#include <vector>
-using namespace std;
-
 #include "EventSource.h"
 
-typedef vector<EventSource*> EventSourceVector;
+typedef Vector<EventSource*> EventSourceVector;
 
 class EventTarget : public EventSource
 {

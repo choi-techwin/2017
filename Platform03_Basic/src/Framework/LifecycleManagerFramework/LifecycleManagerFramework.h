@@ -1,53 +1,57 @@
-#pragma once
+#ifndef TECHNICAL_LIFECYCLEMANAGER_H_
+#define TECHNICAL_LIFECYCLEMANAGER_H_
 
-#include <vector>
-#include <typeinfo>
-#include <iostream>
-#include <string>
-
-using namespace std;
-
-#include "../../Common/Utility/Map.h"
-#include "../Scheduler/Scheduler.h"
-#include "../Scheduler/MainScheduler.h"
+#include "../../Common/Utility/Collection.h"
 #include "../Component/Component.h"
 #include "../Component/EventTarget.h"
+#include "../Scheduler/MainScheduler.h"
+#include "../Scheduler/Scheduler.h"
 
 typedef Map<int, Component*> ComponentMap;
 
-class LifecycleManager: public EventTarget {
+class LifecycleManagerFramework: public EventTarget {
 private:
 	ComponentMap components;
-	MainScheduler mainScheduler;
+
 protected:
-	// As a component
-	virtual void generateEvents() {}
-	virtual void processEvent(Event event) {}
+	MainScheduler mainScheduler;
 
-	void addScheduler(Scheduler* pScheduler) {
-		this->mainScheduler.addScheduler(pScheduler);
-		this->components.insert(make_pair(pScheduler->getID(), pScheduler));
-	}
-	void addComponent(Component* pComponent) {
-		this->mainScheduler.addComponent(pComponent);
-		this->components.insert(make_pair(pComponent->getID(), pComponent));
-	}
-	void addComponent(Component* pComponent, Scheduler* pScheduler) {
-		pScheduler->addComponent(pComponent);
-		this->components.insert(make_pair(pComponent->getID(), pComponent));
-	}
+	void addScheduler(Scheduler* pScheduler);
+	void addComponent(Component* pComponent);
+	void addComponent(Component* pComponent, Scheduler* pScheduler);
 
-	virtual void registerSchedulers() = 0;
-	virtual void registerComponents() = 0;
-	virtual void associateComponents() = 0;
+	void registerSchedulersFramework();
+	void registerComponentsFramework();
+	void associateComponentsFramework();
+
+	virtual void registerSchedulersTechnical() = 0;
+	virtual void registerComponentsTechnical() = 0;
+	virtual void associateComponentsTechnical() = 0;
+
+	virtual void registerSchedulersDomain() = 0;
+	virtual void registerComponentsDomain() = 0;
+	virtual void associateComponentsDomain() = 0;
+
+	virtual void registerSchedulersApp() = 0;
+	virtual void registerComponentsApp() = 0;
+	virtual void associateComponentsApp() = 0;
+
+	void registerSchedulers();
+	void registerComponents();
+	void associateComponents();
 	void configureComponents();
-	void initializeSchedulers();
 	void initializeComponents();
 
-public:
-	LifecycleManager();
-	virtual ~LifecycleManager();
+	// as an EventTarget
+	void generateEvents();
+	void processEvent(Event event);
 
-	virtual int initialize();
+public:
+	LifecycleManagerFramework();
+	virtual ~LifecycleManagerFramework();
+	int initializeFramework();
+
 	virtual int run();
 };
+
+#endif /* TECHNICAL_LIFECYCLEMANAGER_H_ */

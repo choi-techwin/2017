@@ -24,10 +24,13 @@ C_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/Application/S300 \
-src/Domain/DCLink \
-src/Domain/PWM \
+src/Domain/EventSource \
+src/Domain/EventTarget \
+src/Domain/LifecycleManagerDomain \
 src/Framework/Component \
-src/Framework/LifecycleManager \
+src/Framework/LifecycleManagerFramework \
 src/Framework/Scheduler \
 src/Technical/Device \
+src/Technical/LifecycleManagerTech \
+src/Technical/Timer \
 

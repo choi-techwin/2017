@@ -8,16 +8,20 @@
 #ifndef APPLICATION_LIFECYCLEMANAGERAPP_H_
 #define APPLICATION_LIFECYCLEMANAGERAPP_H_
 
-#include "LifecycleManager.h"
+#include "../../Domain/LifecycleManagerDomain/LifecycleManagerDomain.h"
 
-class LifecycleManagerApp: public LifecycleManager {
+class LifecycleManagerApp: public LifecycleManagerDomain {
+protected:
+
 public:
 	LifecycleManagerApp();
 	virtual ~LifecycleManagerApp();
+	int initialize();
 
-	void registerSchedulers();
-	void registerComponents();
-	void associateComponents();
+	// initial Sequence
+	void registerSchedulersApp();
+	void registerComponentsApp();
+	void associateComponentsApp();
 };
 
 #endif /* APPLICATION_LIFECYCLEMANAGERAPP_H_ */
