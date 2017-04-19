@@ -25,17 +25,17 @@ static PWM pwm3;
 static PWM pwm4;
 static PWM pwm5;
 
-LifecycleManager::LifecycleManager() {
+LifecycleManagerFramework::LifecycleManagerFramework() {
 }
 
-LifecycleManager::~LifecycleManager() {
+LifecycleManagerFramework::~LifecycleManagerFramework() {
 }
 
-void LifecycleManager::registerSchedulers() {
+void LifecycleManagerFramework::registerSchedulers() {
 	this->mainScheduler.addScheduler(&scheduler1);
 }
 
-void LifecycleManager::registerComponents() {
+void LifecycleManagerFramework::registerComponents() {
 	this->mainScheduler.addComponent(&dcLink1);
 	this->mainScheduler.addComponent(&pwm1);
 
@@ -44,24 +44,24 @@ void LifecycleManager::registerComponents() {
 	cout << "LifecycleManager::registerComponents()" << endl;
 }
 
-void LifecycleManager::associateComponents() {
+void LifecycleManagerFramework::associateComponents() {
 	pwm1.addEventSource(&dcLink1);
 	pwm2.addEventSource(&dcLink2);
 	cout << "LifecycleManager::associateComponents()" << endl;
 }
 
-void LifecycleManager::configureComponents() {
+void LifecycleManagerFramework::configureComponents() {
 	this->mainScheduler.configureSchedulers();
 	cout << "LifecycleManager::configureComponents()" << endl;
 }
-void LifecycleManager::initializeComponents() {
+void LifecycleManagerFramework::initializeComponents() {
 	dcLink1.initialize();
 	dcLink2.initialize();
 	pwm1.initialize();
 	pwm2.initialize();
 }
 
-int LifecycleManager::initialize() {
+int LifecycleManagerFramework::initialize() {
 	this->registerSchedulers();
 	this->registerComponents();
 	this->associateComponents();
@@ -70,7 +70,7 @@ int LifecycleManager::initialize() {
 	return 0;
 }
 
-int LifecycleManager::run() {
+int LifecycleManagerFramework::run() {
 	mainScheduler.run();
 	return 0;
 }

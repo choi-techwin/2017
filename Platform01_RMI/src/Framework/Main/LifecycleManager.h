@@ -7,7 +7,7 @@
 #include <map>
 using namespace std;
 
-class LifecycleManager {
+class LifecycleManagerFramework {
 private:
 	MainScheduler mainScheduler;
 protected:
@@ -18,8 +18,8 @@ protected:
 	virtual void initializeComponents();
 
 public:
-	LifecycleManager();
-	virtual ~LifecycleManager();
+	LifecycleManagerFramework();
+	virtual ~LifecycleManagerFramework();
 
 	virtual int initialize();
 	virtual int run();

@@ -4,7 +4,7 @@
 
 class MainApp {
 private:
-	LifecycleManager lifecycleManager;
+	LifecycleManagerFramework lifecycleManager;
 public:
 	MainApp();
 	virtual ~MainApp();
