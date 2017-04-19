@@ -15,7 +15,7 @@ using namespace std;
 
 typedef Map<int, Component*> ComponentMap;
 
-class LifecycleManager: public EventTarget {
+class LifecycleManagerFramework: public EventTarget {
 private:
 	ComponentMap components;
 	MainScheduler mainScheduler;
@@ -45,8 +45,8 @@ protected:
 	void initializeComponents();
 
 public:
-	LifecycleManager();
-	virtual ~LifecycleManager();
+	LifecycleManagerFramework();
+	virtual ~LifecycleManagerFramework();
 
 	virtual int initialize();
 	virtual int run();

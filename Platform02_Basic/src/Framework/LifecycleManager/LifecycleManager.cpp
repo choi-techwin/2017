@@ -6,27 +6,27 @@
  */
 #include "LifecycleManager.h"
 
-LifecycleManager::LifecycleManager(): EventTarget(typeid(*this)) {
+LifecycleManagerFramework::LifecycleManagerFramework(): EventTarget(typeid(*this)) {
 }
 
-LifecycleManager::~LifecycleManager() {
+LifecycleManagerFramework::~LifecycleManagerFramework() {
 }
 
-void LifecycleManager::configureComponents() {
+void LifecycleManagerFramework::configureComponents() {
 	this->mainScheduler.configureSchedulers();
 }
 
-void LifecycleManager::initializeSchedulers() {
+void LifecycleManagerFramework::initializeSchedulers() {
 	this->mainScheduler.initializeSchedulers();
 }
 
-void LifecycleManager::initializeComponents() {
+void LifecycleManagerFramework::initializeComponents() {
 	for (ComponentMap::iterator itr=this->components.begin(); itr!=this->components.end(); itr++) {
 		itr->second->initialize();
 	}
 }
 
-int LifecycleManager::initialize() {
+int LifecycleManagerFramework::initialize() {
 	this->registerSchedulers();
 	this->registerComponents();
 	this->associateComponents();
@@ -36,7 +36,7 @@ int LifecycleManager::initialize() {
 	return 0;
 }
 
-int LifecycleManager::run() {
+int LifecycleManagerFramework::run() {
 	mainScheduler.run();
 	return 0;
 }
